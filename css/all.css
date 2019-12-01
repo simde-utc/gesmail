@@ -1,0 +1,32 @@
+  .pull-right {
+    right: 0;
+    position: absolute;
+  }
+
+  .navelem-lv-1 {
+    padding-left: 15px !important;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0rem;
+  }
+
+  .bloc {
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 2%;
+    margin-top: 2%;
+  }
+
+  .rowsEmail {
+    padding-bottom: 5px;
+  }
+
+  #messageBox {
+    position: sticky;
+    bottom: 0;
+  }
+
+  #skeletonMLRow, #skeletonEmailRow {
+    display: none;
+  }
