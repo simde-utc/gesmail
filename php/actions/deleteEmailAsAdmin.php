@@ -24,14 +24,15 @@
   if(!isset($admPerms["admin"]) || $admPerms["admin"] != true)
     exit(json_encode(["status" => 1, "error" => "Vous devez être administrateur pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
 
-  //Delete the permissions
-  $permissionsManager->delete($email, $listPart);
-
   try {
     $status = $sympaManager->del($list, $email, true, $asso . SUFFIXE_MAIL);
   } catch (SoapFault $ex) {
     exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
   }
+
+  //Delete the permissions
+  $permissionsManager->delete($email, $listPart);
+
   if($status)
     exit(json_encode(["status" => 0, "success" => "Email supprimée avec succès"], JSON_UNESCAPED_UNICODE));
   else

@@ -27,11 +27,11 @@
   //Check permissions (here we make sure that user is admin on the list)
   $admPerms = $permissionsManager->get($resourceOwner["email"], $listPart);
   if(!isset($admPerms["admin"]) || $admPerms["admin"] != true)
-    exit(json_encode(["status" => 1, "error" => "Vous devez être administrateur pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
+    exit(json_encode(["status" => 1, "error" => "Vous devez être administrateur pour effectuer cette action.."], JSON_UNESCAPED_UNICODE));
 
-  //Do not add any permissions if it's a redirection
-  if(!preg_match("/(-bounce@)/", $list))
-    $permissionsManager->add($email, $listPart, 0, 0);
+  // Is user a portail one ? (if not ==> no permissions)
+  $user = $portailManager->getPortail(PORTAIL_API_URL . "/users/" . $email, $appAccessToken);
+  $isPortail = (isset($user["message"]) ? false : true);
 
   try {
     //Add the mail to the list
@@ -39,7 +39,12 @@
   } catch (SoapFault $ex) {
     exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
   }
+
+  //Do not add any permissions if it's a redirection
+  if(!preg_match("/(-bounce@)/", $list) && $isPortail)
+    $permissionsManager->add($email, $listPart, 0, 0);
+
   if($statusAdd)
-    exit(json_encode(["status" => 0, "success" => "Email ajouté avec succès"], JSON_UNESCAPED_UNICODE));
+    exit(json_encode(["status" => 0, "success" => "Email ajouté avec succès", "data" => ["isPortail" => $isPortail]], JSON_UNESCAPED_UNICODE));
   else
     exit(json_encode(["status" => 1, "error" => "Echec de l'ajout"], JSON_UNESCAPED_UNICODE));

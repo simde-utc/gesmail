@@ -3,7 +3,7 @@
   session_start();
 
   //Connect to db
-  $db = new PDO("mysql:host=localhost;dbname=mails;charset=utf8", "USER", "PASSWORD"); //best password
+  $db = new PDO("mysql:host=localhost;dbname=mails;charset=utf8", "XXXXXX", "XXXXXX"); //best password
   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   // Include Oauth Php client
@@ -18,8 +18,8 @@
 
   //Oauth provider --> portail des assos
   $oauthProvider = new \League\OAuth2\Client\Provider\GenericProvider([
-    'clientId'                => '53616d79-206a-6520-7427-61696d652021',
-    'clientSecret'            => 'password',
+    'clientId'                => 'XXXXXX',
+    'clientSecret'            => 'XXXXXX',
     'redirectUri'             => 'http://localhost/agniacum/retour_portail_oauth.php',
     'scopes'                  => "user-get-info user-get-assos user-get-roles",
     'urlAuthorize'            => ASSO_SERV_URL . "oauth/authorize",
@@ -27,17 +27,29 @@
     'urlResourceOwnerDetails' => ASSO_SERV_URL . "api/v1/user"
   ]);
 
+  //OauthClient provider --> portail des assos (this one is for the application)
+  $oauthClientProvider = new \League\OAuth2\Client\Provider\GenericProvider([
+    'clientId'                => 'XXXXXX',
+    'clientSecret'            => 'XXXXXX',
+    'redirectUri'             => 'http://localhost/agniacum/retour_portail_oauth.php',
+    'scopes'                  => "client-get-users-active",
+    'urlAuthorize'            => ASSO_SERV_URL . "oauth/authorize",
+    'urlAccessToken'          => ASSO_SERV_URL . "oauth/token",
+    'urlResourceOwnerDetails' => ASSO_SERV_URL . "api/v1/user"
+  ]);
 
-  $classesPath = $_SERVER["DOCUMENT_ROOT"] . "/agniacum/php/classes/";
   //include php classes
+  $classesPath = $_SERVER["DOCUMENT_ROOT"] . "/agniacum/php/classes/";
   require($classesPath . "PortailManager.class.php");
   require($classesPath . "SympaManager.class.php");
   require($classesPath . "PermissionsManager.class.php");
+  require($classesPath . "PermissionsListManager.class.php");
 
-  //Declare classes
+  //Declare managers
   $portailManager = new PortailManager($oauthProvider, ASSO_SERV_URL);
-  $sympaManager = new SympaManager(SERV_SOAP_SYMPA, 'USERAPP', 'PASSWORD');
+  $sympaManager = new SympaManager(SERV_SOAP_SYMPA, 'XXXXXX', 'XXXXXX');
   $permissionsManager = new PermissionsManager($db);
+  $permissionsListManager = new PermissionsListManager($db);
 
   //If no access token, get one
   if(isset($_SESSION["access_token"]) && !empty($_SESSION["access_token"])) {
@@ -48,8 +60,16 @@
     header('Location: ' . $authorizationUrl);
   }
 
+  // Get the access token for the application
+  try {
+      $appAccessToken = $oauthClientProvider->getAccessToken('client_credentials');
+  } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+      // Failed to get the access token
+      exit($e->getMessage()); //TODO: Gérer ces erreurs
+  }
+
   if(isset($accessToken) && !empty($accessToken)) {
-    //Define here elements needed everywhere
+    //Define here elements needed for every page
     $resourceOwner = $portailManager->_provider->getResourceOwner($accessToken)->toArray();
 
     //Get all user's assos

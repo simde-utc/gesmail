@@ -1,11 +1,17 @@
-<nav class="navbar align-content-start">
-  <!-- First, all the mailing lists where user is from restrained -->
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/agniacum/php/required.php"); ?>
+<nav class="navbar align-content-start flex-column align-items-baseline">
+  <!-- First, all the mailing lists where user is from asso with specific role -->
+  <p class="nav-link" href="#">Mailing listes des assos (rôle bureau restreint) :</p>
   <?php foreach ($assosAdminPortail as $key => $asso) : ?>
     <a class="nav" href="/agniacum/asso.php?asso=<?= $asso["login"] ?>">Mailing listes de <?= $asso["shortname"] ?></a>
     <?php
       $orderdList = $sympaManager->lists($asso["login"] . SUFFIXE_MAIL);
       usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
       foreach ($orderdList as $index => $list) :
+
+        if(preg_match("/^(auto-)/", $list->listAddress))
+          continue; //Do not show automatic lists
+
         if(preg_match("/(-bounce@)/", $list->listAddress))
           $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce
         ?>
@@ -15,9 +21,9 @@
   <?php endforeach ?>
 </nav>
 <hr/>
-<nav class="navbar align-content-start">
+<nav class="navbar align-content-start flex-column align-items-baseline">
   <!-- Then, all the mailing lists where user has admin permission -->
-  <a class="nav-link" href="#">Mailing listes que vous administrez</a>
+  <p class="nav-link" >Mailing listes que vous administrez :</p>
   <?php
     usort($assosAdminSympa, function ($ml1, $ml2) { return strcmp($ml1["list"], $ml2["list"]); });
     foreach ($assosAdminSympa as $index => $list) :
@@ -28,9 +34,9 @@
   <?php endforeach ?>
 </nav>
 <hr/>
-<nav class="navbar align-content-start">
+<nav class="navbar align-content-start flex-column align-items-baseline">
   <!-- last, all the mailing lists where user is a subscriber -->
-  <a class="nav-link" href="#">Mailing listes auxquelles vous êtes inscrit</a>
+  <p class="nav-link" href="#">Mailing listes auxquelles vous êtes inscrit :</p>
   <?php
     $orderdList = $sympaManager->lists($resourceOwner["email"]);
     usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
@@ -38,8 +44,11 @@
       preg_match(REGEX_LOGINASSO, $list->listAddress, $loginAsso);
       $assoSub = $portailManager->getPortail(PORTAIL_API_URL . "/assos/" . $loginAsso[0], $accessToken);
 
+      if(preg_match("/^(auto-)/", $list->listAddress) || !$list->isSubscriber)
+        continue; //Do not show automatic lists
+
       if(preg_match("/(-bounce@)/", $list->listAddress))
-        $list->listAddress = $assoSub["login"] . SUFFIXE_MAIL; //Do not show bounce
+        $list->listAddress = $assoSub["login"] . SUFFIXE_MAIL; //Do not show bounce parti of the email
       ?>
       <a class="nav-link navelem-lv-1" href="/agniacum/sublist.php?asso=<?= $assoSub["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a>
   <?php endforeach ?>

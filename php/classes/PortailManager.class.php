@@ -37,7 +37,7 @@
       return $authorizationUrl;
     }
 
-    // Make a call on the portail
+    // Make a get call on the portail
     public function getPortail($route, $token, $params = null) {
       $request = $this->_provider->getAuthenticatedRequest(
         'GET', //Protocol

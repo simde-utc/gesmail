@@ -21,6 +21,8 @@ function makeRequest(method, url, params, callback) {
         } else {
           showMessage("danger", "Erreur", response.error);
         }
+      } else if(httpRequest.status === 302) {
+        showMessage("danger", "Erreur", "Problème de chargement de la page, connexion expirée ?");
       } else {
         alert('Un problème est survenu avec la requête.');
       }
@@ -44,7 +46,24 @@ function showMessage(type, state, message, duration = 5000) {
 }
 
 document.getElementById("closeMessageBox").addEventListener("click", hideMessageBox);
-
 function hideMessageBox() {
   document.getElementById("messageBox").classList.add("d-none");
+}
+
+function httpGetAsync(url, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", url, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+
+//Functions that add / delete ML should call this to keep left menue updated (Mabe call it when we add / update current user subscriptions)
+function reloadLeftMenu() {
+  httpGetAsync("php/frags/leftmenu.php", function(response) {
+    console.log(response);
+    document.getElementById("leftMenu").innerHTML = response;
+  });
 }

@@ -11,7 +11,6 @@
        //Adds a user to a list
        //if $quiet, doesn't send welcome file
        public function add ($list, $mail, $quiet, $ownerMail = false) {
-         if ($mail === false) $mail = $this->USER_EMAIL;
            return $this->client->authenticateRemoteAppAndRun(
                $this->username, $this->password, "USER_EMAIL=$ownerMail",
                'add',
@@ -22,7 +21,6 @@
        //Deletes a user from a list
        //if $quiet, doesn't send quit notification
        public function del ($list, $mail, $quiet, $ownerMail = false) {
-         if ($mail === false) $mail = $this->USER_EMAIL;
            return $this->client->authenticateRemoteAppAndRun(
                $this->username, $this->password, "USER_EMAIL=$ownerMail",
                'del',
@@ -31,8 +29,6 @@
        }
 
        public function which ($mail = false) {
-           if ($mail === false) $mail = $this->USER_EMAIL;
-
            $SoapAnswer = $this->client->authenticateRemoteAppAndRun($this->username, $this->password, "USER_EMAIL=$mail", 'which', null);
            $i = 0;
            $lists = [];
@@ -48,27 +44,22 @@
        }
 
        public function review ($list, $mail = false) {
-           if ($mail === false) $mail = $this->USER_EMAIL;
            return $this->client->authenticateRemoteAppAndRun($this->username, $this->password, "USER_EMAIL=$mail", 'review', array($list));
        }
 
        public function createList ($list, $mail = false) {
-           if($mail === false) $mail = $this->USER_EMAIL;
            return $this->client->authenticateRemoteAppAndRun($this->username, $this->password, "USER_EMAIL=$mail", 'createList', $list);
        }
 
        public function closeList($list, $mail = false) {
-            if($mail === false) $mail = $this->USER_EMAIL;
             return $this->client->authenticateRemoteAppAndRun($this->username, $this->password, "USER_EMAIL=$mail", 'closeList', array($list));
        }
 
        public function lists($mail = false) {
-           if($mail === false) $mail = $this->USER_EMAIL;
            return $this->client->authenticateRemoteAppAndRun($this->username, $this->password, "USER_EMAIL=$mail", 'complexWhich', null);
        }
 
        public function info($list, $mail = false) {
-           if($mail === false) $mail = $this->USER_EMAIL;
            return $this->client->authenticateRemoteAppAndRun($this->username, $this->password, "USER_EMAIL=$mail", 'info', array($list));
        }
 
@@ -82,8 +73,6 @@
 
        //Proxy variables
        public $USER_EMAIL;
-       public $remote_host;
-       public $SYMPA_ROBOT;
 
    }
 ?>

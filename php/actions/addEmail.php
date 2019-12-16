@@ -21,24 +21,21 @@
   $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $list);
 
   //Check permissions (here we make sure that user is part of restricted)
-  preg_match(REGEX_LOGINASSO, $list, $loginasso);
   $isBureauRestreint = false;
   foreach ($assosAdminPortail as $key => $ml) {
-    if($ml["login"] == $loginasso[0])
+    if($ml["login"] == $asso)
       $isBureauRestreint = true;
   }
-
   if(!$isBureauRestreint)
-    exit(json_encode(["status" => 1, "error" => "Vous n'avez pas les droits nécessaires pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
-
-
-  //Do not add any permissions if it's a redirection
-  if(!preg_match("/(-bounce@)/", $list))
-    $permissionsManager->add($email, $listPart, 0, 0);
+    exit(json_encode(["status" => 1, "error" => "Vous n'avez pas les droits nécessaires pour effectuer cette action."], JSON_UNESCAPED_UNICODE));
 
   //Make sure email is valid
   if (!filter_var($email, FILTER_VALIDATE_EMAIL))
     exit(json_encode(["status" => 1, "error" => "Format d'email incorrect"], JSON_UNESCAPED_UNICODE));
+
+  // Is user a portail one ? (if not ==> no permissions)
+  $user = $portailManager->getPortail(PORTAIL_API_URL . "/users/" . $email, $appAccessToken);
+  $isPortail = (isset($user["message"]) ? false : true);
 
   try {
     //Add the mail to the list
@@ -47,7 +44,11 @@
     exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
   }
 
+  //Do not add any permissions if it's a redirection
+  if(!preg_match("/(-bounce@)/", $list) && $isPortail)
+    $permissionsManager->add($email, $listPart, 0, 0);
+
   if($statusAdd)
-    exit(json_encode(["status" => 0, "success" => "Email ajouté avec succès"], JSON_UNESCAPED_UNICODE));
+    exit(json_encode(["status" => 0, "success" => "Email ajouté avec succès", "data" => ["isPortail" => $isPortail]], JSON_UNESCAPED_UNICODE));
   else
     exit(json_encode(["status" => 1, "error" => "Echec de l'ajout"], JSON_UNESCAPED_UNICODE));

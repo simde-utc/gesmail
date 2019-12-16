@@ -14,4 +14,10 @@
     </div>
   </body>
   <script src="js/all.js"></script>
+  <script>
+    document.getElementById("toggleMenuButton").addEventListener("click", function(evt) {
+      document.getElementById("leftMenu").classList.toggle("d-none");
+      document.getElementById("content").classList.toggle("d-none");
+    });
+  </script>
 </html>

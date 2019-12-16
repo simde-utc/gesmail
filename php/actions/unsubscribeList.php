@@ -15,14 +15,15 @@
   //Get everything before the @
   $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
 
-  //Delete the permissions
-  $permissionsManager->delete($resourceOwner["email"], $listPart);
-
   try {
     $statusDel = $sympaManager->del($listname, $resourceOwner["email"], true, $asso . SUFFIXE_MAIL);
   } catch (SoapFault $ex) {
     exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
   }
+
+  //Delete the permissions
+  $permissionsManager->delete($resourceOwner["email"], $listPart);
+
   if($statusDel)
     exit(json_encode(["status" => 0, "success" => "Email supprimée avec succès"], JSON_UNESCAPED_UNICODE));
   else

@@ -20,25 +20,23 @@
   $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $list);
 
   //Check permissions (here we make sure that user is part of restricted)
-  preg_match(REGEX_LOGINASSO, $list, $loginasso);
   $isBureauRestreint = false;
   foreach ($assosAdminPortail as $key => $ml) {
-    if($ml["login"] == $loginasso[0])
+    if($ml["login"] == $asso)
       $isBureauRestreint = true;
   }
-
   if(!$isBureauRestreint)
     exit(json_encode(["status" => 1, "error" => "Vous n'avez pas les droits nécessaires pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
-
-
-  //Delete the permissions
-  $permissionsManager->delete($email, $listPart);
 
   try {
     $status = $sympaManager->del($list, $email, true, $asso . SUFFIXE_MAIL);
   } catch (SoapFault $ex) {
     exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
   }
+
+  //Delete the permissions
+  $permissionsManager->delete($email, $listPart);
+
   if($status)
     exit(json_encode(["status" => 0, "success" => "Email supprimée avec succès"], JSON_UNESCAPED_UNICODE));
   else

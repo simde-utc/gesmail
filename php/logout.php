@@ -1,5 +1,6 @@
 <?php
-  require_once("required.php");
+  //Start session, remove session -> Done ! 
+  session_start();
 
   //Remove session
   unset($_SESSION["access_token"]);

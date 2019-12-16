@@ -8,18 +8,23 @@
   if(!isset($_POST["asso"]) || empty(trim($_POST["asso"])))
     exit(json_encode(["status" => 1, "error" => "Asso invalide ou inexistante"], JSON_UNESCAPED_UNICODE));
 
+  if(!isset($_POST["send"]))
+    exit(json_encode(["status" => 1, "error" => "Send state invalide ou inexistant"], JSON_UNESCAPED_UNICODE));
 
   //escape everything + check if setted properly
   $listname = htmlspecialchars(trim($_POST["listname"]));
   $asso = htmlspecialchars(trim($_POST["asso"]));
-  $fullName = $asso . "-" . $listname;
+  $send = (bool) $_POST["send"];
 
-  //Make sure list name is valid
-  if (!filter_var($fullName . SUFFIXE_MAIL, FILTER_VALIDATE_EMAIL))
-    exit(json_encode(["status" => 1, "error" => "Format de liste invalide"], JSON_UNESCAPED_UNICODE));
+  if(!is_bool($send))
+    exit(json_encode(["status" => 1, "error" => "Send state invalide"], JSON_UNESCAPED_UNICODE));
 
-  //Do not create a -bounce mailing list
-  if(preg_match("/(-bounce@)/", $fullName . SUFFIXE_MAIL))
+  //Make sure email is valid
+  if (!filter_var($listname, FILTER_VALIDATE_EMAIL))
+    exit(json_encode(["status" => 1, "error" => "Format de liste incorrect"], JSON_UNESCAPED_UNICODE));
+
+  //Do not touch a -bounce mailing list
+  if(preg_match("/(-bounce@)/", $listname))
     exit(json_encode(["status" => 1, "error" => "Bounce est un mot réservé"], JSON_UNESCAPED_UNICODE));
 
   //Ensure user has enough rights
@@ -31,16 +36,7 @@
   if(!$isBureauRestreint)
     exit(json_encode(["status" => 1, "error" => "Vous n'avez pas les droits nécessaires pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
 
-  try {
-    $statusCreate = $sympaManager->createList([$fullName, "Description de la liste", "assos", "Mail asso", "assos"], $asso . SUFFIXE_MAIL);
-  } catch (SoapFault $ex) {
-    exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
-  }
+  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $permissionsListManager->update($listPart, $send);
 
-  // By default lists are not moderated
-  $permissionsListManager->add($fullName, true);
-
-  if($statusCreate)
-    exit(json_encode(["status" => 0, "success" => "Liste crée avec succès"], JSON_UNESCAPED_UNICODE));
-  else
-    exit(json_encode(["status" => 1, "error" => "Echec lors de la création de la liste"], JSON_UNESCAPED_UNICODE));
+  exit(json_encode(["status" => 0, "success" => "La liste a été modifée avec succès"], JSON_UNESCAPED_UNICODE));

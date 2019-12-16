@@ -1,5 +1,5 @@
 <?php
-  //All the ways to manage permissions
+  //All the ways to manage user level permissions
   class PermissionsManager {
     public $_db;
 
@@ -8,7 +8,7 @@
     }
 
     public function get($email, $list) {
-      $statement = $this->_db->prepare("SELECT admin, mailer FROM permissions WHERE email = :email AND list = :list");
+      $statement = $this->_db->prepare("SELECT admin, goThroughModeration FROM permissions WHERE email = :email AND list = :list");
       $statement->bindValue(":email", $email);
       $statement->bindValue(":list", $list);
       $statement->execute();
@@ -17,7 +17,7 @@
     }
 
     public function getList($list) {
-      $statement = $this->_db->prepare("SELECT email, admin, mailer FROM permissions WHERE list = :list");
+      $statement = $this->_db->prepare("SELECT email, admin, goThroughModeration FROM permissions WHERE list = :list");
       $statement->bindValue(":list", $list);
       $statement->execute();
       return $statement->fetchAll(PDO::FETCH_GROUP);
@@ -31,20 +31,20 @@
       return $statement->fetchAll();
     }
 
-    public function add($email, $list, $isAdmin, $isMailer) {
-      $statement = $this->_db->prepare("INSERT INTO permissions (email, list, admin, mailer) VALUES(:email, :list, :admin, :mailer)");
+    public function add($email, $list, $isAdmin, $canGoThroughModeration) {
+      $statement = $this->_db->prepare("INSERT INTO permissions (email, list, admin, goThroughModeration) VALUES(:email, :list, :admin, :goThroughModeration)");
       $statement->bindValue(":email", $email);
       $statement->bindValue(":list", $list);
       $statement->bindValue(":admin", $isAdmin, PDO::PARAM_BOOL);
-      $statement->bindValue(":mailer", $isMailer, PDO::PARAM_BOOL);
+      $statement->bindValue(":goThroughModeration", $canGoThroughModeration, PDO::PARAM_BOOL);
       $statement->execute();
       return false;
     }
 
-    public function update($email, $list, $isAdmin, $isMailer) {
-      $statement = $this->_db->prepare("UPDATE permissions SET admin = :admin, mailer = :mailer WHERE email = :email AND list = :list");
+    public function update($email, $list, $isAdmin, $canGoThroughModeration) {
+      $statement = $this->_db->prepare("UPDATE permissions SET admin = :admin, goThroughModeration = :goThroughModeration WHERE email = :email AND list = :list");
       $statement->bindValue(":admin", $isAdmin, PDO::PARAM_BOOL);
-      $statement->bindValue(":mailer", $isMailer, PDO::PARAM_BOOL);
+      $statement->bindValue(":goThroughModeration", $canGoThroughModeration, PDO::PARAM_BOOL);
       $statement->bindValue(":email", $email);
       $statement->bindValue(":list", $list);
       $statement->execute();

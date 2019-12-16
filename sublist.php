@@ -36,7 +36,7 @@
   //Check wheter the user is subscribed to the list
   $isMemberOfList = false;
   foreach ($sympaManager->which($resourceOwner["email"]) as $key => $ml) {
-    if($ml["listAddress"] == $currentList->listAddress)
+    if($ml["listAddress"] == $currentList->listAddress && $ml["isSubscriber"])
       $isMemberOfList = true;
   }
 
@@ -44,32 +44,32 @@
     die("Vous n'êtes pas membre de cette liste");
 
   $newListPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
-  $rights = $permissionsManager->getList($newListPart);
+  $rights = $permissionsManager->get($resourceOwner["email"], $newListPart);
+  $permissionsList = $permissionsListManager->get($newListPart);
+
 
   $isAdmin = (isset($rights["admin"])) ? $rights["admin"] : false;
-  $isMailer = (isset($rights["mailer"])) ? $rights["mailer"] : false;
+  $canGoThroughModeration = (isset($rights["goThroughModeration"])) ? $rights["goThroughModeration"] : false;
 
   //If this is a redirection, change the display name
   $displayAdress = ($isRedirection) ? $currentAsso["login"] . SUFFIXE_MAIL : $currentList->listAddress;
 
   require_once("php/frags/header.php");
 ?>
-<div class="col-10">
+<div class="col-md-10 d-md-block" id="content">
   <div class="container bloc">
-    <h1 class="text-center">Vous êtes actuellement abonné à <?= $displayAdress ?></h1>
-    <p>Bonjour, bienvenu sur l'Accueil de la mailing liste <?= $displayAdress ?>, tu peux ici modifier la mailing liste.</p>
+    <h1 class="text-center text-break">Vous êtes actuellement abonné à <?= $displayAdress ?></h1>
+    <p>Bonjour, bienvenue sur l'accueil de la mailing liste <?= $displayAdress ?></p>
     <p>Tu peux ici voir tes droits sur cette mailing liste et te désinscrire</p>
+    <p>La mailing liste est modérée ? <?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Non, tous les membres peuvent envoyer un mail" : "Oui, les admin doivent accepter les messages" ?></p>
   </div>
   <div class="container bloc">
-    <h1 class="text-center">Droits sur <?= $displayAdress ?></h1>
-    <p>Pour commencer, tu peux sélectionner une asso dans le menu de gauche et gérer les redirections ou ajouter / modifier les mailing listes</p>
-    <p>Pour chaque mailing liste, tu pourra ajouter / supprimer des membres, gérer les droits (notamment concernant l'envoi de mails et la modération).</p>
-    <p>Tu peux aussi administrer les message directement depuis cette interface.</p>
-    <p>Administrateur ? <?= ($isAdmin) ? "Oui" : "Non" ?></p>
-    <p>Override droits d'envoi ? <?= ($isMailer) ? "Oui" : "Non" ?></p>
+    <h1 class="text-center text-break">Droits sur <?= $displayAdress ?></h1>
+    <p>Droits d'administrateur ? <?= ($isAdmin) ? "Oui" : "Non" ?></p>
+    <p>Droit de passer outre la modération (si la liste est modérée) ? <?= ($canGoThroughModeration) ? "Oui" : "Non" ?></p>
   </div>
   <div class="container bloc">
-    <h1 class="text-center">Se désinscrire de <?= $displayAdress ?></h1>
+    <h1 class="text-center text-break">Se désinscrire de <?= $displayAdress ?></h1>
     <div class="input-group">
       <input type="text" class="form-control" type="email" value="<?= $resourceOwner["email"] ?>" disabled></input>
       <div class="input-group-append" role="group">
@@ -85,6 +85,7 @@
     var listname = this.getAttribute("list");
       makeRequest("POST", "php/actions/unsubscribeList.php", {"asso": asso, "listname": listname}, function(response) {
         showMessage("success", "Succès", "Vous avez été désinscrit avec succès");
+        reloadLeftMenu();
     });
   });
 </script>

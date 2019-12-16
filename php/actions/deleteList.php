@@ -8,7 +8,6 @@
   if(!isset($_POST["asso"]) || empty(trim($_POST["asso"])))
     exit(json_encode(["status" => 1, "error" => "Asso invalide ou inexistante"], JSON_UNESCAPED_UNICODE));
 
-
   //escape everything + check if setted properly
   $listname = htmlspecialchars(trim($_POST["listname"]));
   $asso = htmlspecialchars(trim($_POST["asso"]));
@@ -17,19 +16,29 @@
   if (!filter_var($listname, FILTER_VALIDATE_EMAIL))
     exit(json_encode(["status" => 1, "error" => "Format de liste incorrect"], JSON_UNESCAPED_UNICODE));
 
-
   //Do not delete a -bounce mailing list
   if(preg_match("/(-bounce@)/", $listname))
     exit(json_encode(["status" => 1, "error" => "Bounce est un mot réservé"], JSON_UNESCAPED_UNICODE));
 
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
-  $permissionsManager->deleteList($listPart);
+  //Ensure user has enough rights
+  $isBureauRestreint = false;
+  foreach ($assosAdminPortail as $key => $ml) {
+    if($ml["login"] == $asso)
+      $isBureauRestreint = true;
+  }
+  if(!$isBureauRestreint)
+    exit(json_encode(["status" => 1, "error" => "Vous n'avez pas les droits nécessaires pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
 
   try {
     $statusCreate = $sympaManager->closeList($listname, $asso . SUFFIXE_MAIL);
   } catch (SoapFault $ex) {
     exit(json_encode(["status" => 1, "error" => ("$ex->faultstring, détail : " . utf8_decode($ex->detail) . " ($ex->faultcode)")], JSON_UNESCAPED_UNICODE));
   }
+
+  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $permissionsManager->deleteList($listPart);
+  $permissionsListManager->delete($listPart, true);
+
   if($statusCreate)
     exit(json_encode(["status" => 0, "success" => "Liste supprimée avec succès"], JSON_UNESCAPED_UNICODE));
   else
