@@ -25,3 +25,8 @@
   #skeletonMLRow, #skeletonEmailRow {
     display: none;
   }
+
+  .nolinks {
+    padding-bottom: 0 !important;
+        margin: 0 !important;
+  }

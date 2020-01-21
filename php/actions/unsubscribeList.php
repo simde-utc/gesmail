@@ -13,7 +13,11 @@
   $listname = htmlspecialchars(trim($_POST["listname"]));
 
   //Get everything before the @
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $listPart = preg_replace("/\@.*/", "", $listname);
+
+  //Please don't touch to automatic lists
+  if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list))
+    exit(json_encode(["status" => 1, "error" => "Cette liste n'est pas modifiable"], JSON_UNESCAPED_UNICODE));
 
   try {
     $statusDel = $sympaManager->del($listname, $resourceOwner["email"], true, $asso . SUFFIXE_MAIL);

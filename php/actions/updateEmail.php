@@ -28,6 +28,10 @@
   $isAdmin = (bool) $_POST["isAdmin"];
   $canGoThroughModeration = (bool) $_POST["canGoThroughModeration"];
 
+  //Please don't touch to automatic lists
+  if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list))
+    exit(json_encode(["status" => 1, "error" => "Cette liste n'est pas modifiable"], JSON_UNESCAPED_UNICODE));
+
   //Make sure email is valid
   if (!filter_var($newMail, FILTER_VALIDATE_EMAIL))
     exit(json_encode(["status" => 1, "error" => "Nouvelle adresse email invalide ou inexistante"], JSON_UNESCAPED_UNICODE));
@@ -39,7 +43,7 @@
     exit(json_encode(["status" => 1, "error" => "goThroughModeration state invalide"], JSON_UNESCAPED_UNICODE));
 
   //Get everything before the @
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $list);
+  $listPart = preg_replace("/\@.*/", "", $list);
 
   //Check permissions (here we make sure that user is part of restricted)
   $isBureauRestreint = false;

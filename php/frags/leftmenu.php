@@ -9,7 +9,7 @@
       usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
       foreach ($orderdList as $index => $list) :
 
-        if(preg_match("/^(auto-)/", $list->listAddress))
+        if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress)) //TODO: update here
           continue; //Do not show automatic lists
 
         if(preg_match("/(-bounce@)/", $list->listAddress))
@@ -18,6 +18,13 @@
       <a class="nav-link navelem-lv-1" href="/agniacum/list.php?asso=<?= $asso["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a>
     <?php endforeach ?>
     <a class="nav-link navelem-lv-1" href="/agniacum/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a>
+  <?php endforeach ?>
+  <!-- Display automatic lists -->
+  <p class="nav">Mailing listes de <?= $asso["shortname"] ?> (pour les resps)</p>
+  <?php foreach ($assosPosteAutoPortail as $key => $asso) : ?>
+    <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) : ?>
+      <p class="nav-link navelem-lv-1 nolinks"><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></p>
+    <?php endforeach ?>
   <?php endforeach ?>
 </nav>
 <hr/>
@@ -43,9 +50,6 @@
     foreach ($orderdList as $index => $list) :
       preg_match(REGEX_LOGINASSO, $list->listAddress, $loginAsso);
       $assoSub = $portailManager->getPortail(PORTAIL_API_URL . "/assos/" . $loginAsso[0], $accessToken);
-
-      if(preg_match("/^(auto-)/", $list->listAddress) || !$list->isSubscriber)
-        continue; //Do not show automatic lists
 
       if(preg_match("/(-bounce@)/", $list->listAddress))
         $list->listAddress = $assoSub["login"] . SUFFIXE_MAIL; //Do not show bounce parti of the email

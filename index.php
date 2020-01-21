@@ -6,7 +6,7 @@
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil du Gesmail</h1>
     <p>Bienvenue sur le Gesmail, tu peux ici gérer les mailing listes de ton asso ou celles auxquelles tu est inscrit.</p>
-    <p>Dans le menu, il y a 3 catégories: les mailing listes de ton asso (si tu est membre du bureau restreint), les mailing listes que tu administre et les mailing listes auxquelles tu est inscrit.</p>
+    <p>Dans le menu, il y a 3 catégories: les mailing listes de ton asso (si tu est membre du bureau restreint)(+ les mailing listes de rôle, si tu est resp), les mailing listes que tu administre et les mailing listes auxquelles tu est inscrit.</p>
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Menu d'asso</h1>

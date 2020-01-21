@@ -27,6 +27,10 @@
   if(preg_match("/(-bounce@)/", $listname))
     exit(json_encode(["status" => 1, "error" => "Bounce est un mot réservé"], JSON_UNESCAPED_UNICODE));
 
+  //Please don't touch to automatic lists
+  if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $listname))
+    exit(json_encode(["status" => 1, "error" => "Cette liste n'est pas modifiable"], JSON_UNESCAPED_UNICODE));
+
   //Ensure user has enough rights
   $isBureauRestreint = false;
   foreach ($assosAdminPortail as $key => $ml) {
@@ -36,7 +40,7 @@
   if(!$isBureauRestreint)
     exit(json_encode(["status" => 1, "error" => "Vous n'avez pas les droits nécessaires pour effectuer cette action"], JSON_UNESCAPED_UNICODE));
 
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $listPart = preg_replace("/\@.*/", "", $listname);
   $permissionsListManager->update($listPart, $send);
 
   exit(json_encode(["status" => 0, "success" => "La liste a été modifée avec succès"], JSON_UNESCAPED_UNICODE));

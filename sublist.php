@@ -14,7 +14,7 @@
 
   //If this is a redirection, we don't want to show the "-bounce" part to the user
   $isRedirection = false;
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $listPart = preg_replace("/\@.*/", "", $listname);
   if($listPart == $currentAsso["login"]) {
     $isRedirection = true;
     $listname = $listPart . "-bounce" . SUFFIXE_MAIL;
@@ -24,7 +24,7 @@
   if(array_key_exists("message", $currentAsso))
     die($currentAsso["message"]);
 
-  if(!preg_match("/$currentAsso[login]/", $listname))
+  if(!preg_match("/^$currentAsso[login]/", $listname))
     die("La liste ne corresponds pas à l'association");
 
   try {
@@ -43,7 +43,7 @@
   if(!$isMemberOfList)
     die("Vous n'êtes pas membre de cette liste");
 
-  $newListPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $newListPart = preg_replace("/\@.*/", "", $listname);
   $rights = $permissionsManager->get($resourceOwner["email"], $newListPart);
   $permissionsList = $permissionsListManager->get($newListPart);
 
@@ -69,6 +69,7 @@
     <p>Droit de passer outre la modération (si la liste est modérée) ? <?= ($canGoThroughModeration) ? "Oui" : "Non" ?></p>
   </div>
   <div class="container bloc">
+    <?php if(!preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $listPart)) : ?>
     <h1 class="text-center text-break">Se désinscrire de <?= $displayAdress ?></h1>
     <div class="input-group">
       <input type="text" class="form-control" type="email" value="<?= $resourceOwner["email"] ?>" disabled></input>
@@ -76,6 +77,16 @@
         <button class="btn btn-danger" id="unsubListBtn" list="<?= $currentList->listAddress ?>" asso="<?= $currentAsso["login"] ?>">Se désinscire</button>
       </div>
     </div>
+  <?php else : ?>
+    <h1 class="text-center text-break">Vous ne pouvez pas vous désinscrire de la mailing liste <?= $displayAdress ?></h1>
+    <p>Cette mailing liste est automatique, vous êtes inscrit en raison de votre rôle dans une association, vous serez désinscrit automatiquement lorsque vous n'aurez plus ce rôle.</p>
+    <div class="input-group">
+      <input type="text" class="form-control" type="email" value="<?= $resourceOwner["email"] ?>" disabled></input>
+      <div class="input-group-append" role="group">
+        <button class="btn btn-danger" disabled>Se désinscire</button>
+      </div>
+    </div>
+  <?php endif ?>
   </div>
 </div>
 <script>

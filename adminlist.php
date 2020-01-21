@@ -26,7 +26,7 @@
   }
 
   //Get the part before the @
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $currentList->listAddress);
+  $listPart = preg_replace("/\@.*/", "", $currentList->listAddress);
 
   $userPerms = $permissionsManager->get($resourceOwner["email"], $listPart);
   if(!isset($userPerms["admin"]) || !$userPerms["admin"])

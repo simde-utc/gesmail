@@ -36,26 +36,33 @@
     <p>Pour chaque mailing liste, tu pourra ajouter / supprimer des membres, gérer les droits (notamment concernant l'envoi de mails et la modération).</p>
     <ul id="listOfMailingLists" suffix="<?= SUFFIXE_MAIL ?>">
       <?php
+        $specificLists = [];
         $orderdList = $sympaManager->lists($currentAsso["login"] . SUFFIXE_MAIL);
         usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
         foreach ($orderdList as $index => $list) :
-          if(preg_match("/^(auto-)/", $list->listAddress))
-            continue; //Do not show automatic lists
-          if(preg_match("/(-bounce@)/", $list->listAddress))
-            continue; //Just keep redirections as we don't want them to be deleted
-          $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $list->listAddress);
+          //Do not show automatic lists nor automatic lists
+          if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress))
+            continue;
+
+          $isBounce = false;
+          if(preg_match("/(-bounce)/", $list->listAddress)) {
+            $list->listAddress = $currentAsso["login"] . SUFFIXE_MAIL;
+            $isBounce = true;
+          }
+
+          $listPart = preg_replace("/\@.*/", "", $list->listAddress);
           $default = $permissionsListManager->get($listPart);
         ?>
         <li class="input-group rowsEmail">
           <input class="form-control" value="<?= $list->listAddress ?>" disabled></input>
           <div class="input-group-append" role="group">
-            <select class="form-control">
+            <select class="form-control <?= ($isBounce) ? "d-none" : "" ?>">
               <option <?= (isset($default["send"]) && $default["send"]) ? "selected" : "" ?> value="1">Tous les membres peuvent envoyer un mail</option>
               <option <?= (isset($default["send"]) && $default["send"]) ? "" : "selected" ?> value="0">Liste modérée</option>
             </select>
-            <button class="btn btn-primary updateListBtn" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Modifier</button>
+            <button class="btn btn-primary updateListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Modifier</button>
             <a class="btn btn-primary" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>&list=<?= $list->listAddress ?>" role="button">Détails</a>
-            <button class="btn btn-danger deleteListBtn" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Supprimer</button>
+            <button class="btn btn-danger deleteListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Supprimer</button>
           </div>
         </li>
         <?php endforeach ?>

@@ -22,6 +22,10 @@
   if(preg_match("/(-bounce@)/", $fullName . SUFFIXE_MAIL))
     exit(json_encode(["status" => 1, "error" => "Bounce est un mot réservé"], JSON_UNESCAPED_UNICODE));
 
+  //Prevent everything that looks like an automatic name
+  if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $fullName))
+    exit(json_encode(["status" => 1, "error" => "Mot clé réservé"], JSON_UNESCAPED_UNICODE));
+
   //Ensure user has enough rights
   $isBureauRestreint = false;
   foreach ($assosAdminPortail as $key => $ml) {

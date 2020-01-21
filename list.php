@@ -14,7 +14,7 @@
 
   //If this is a redirection, we don't want to show the "-bounce" part to the user
   $isRedirection = false;
-  $listPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $listPart = preg_replace("/\@.*/", "", $listname);
   if($listPart == $currentAsso["login"]) {
     $isRedirection = true;
     $listname = $listPart . "-bounce" . SUFFIXE_MAIL;
@@ -45,7 +45,7 @@
   //Get all members of this list
   $listMembers = $sympaManager->review($currentList->listAddress, $currentAsso["login"] . SUFFIXE_MAIL);
 
-  $newListPart = preg_replace("/" . SUFFIXE_MAIL . "/", "", $listname);
+  $newListPart = preg_replace("/\@.*/", "", $listname);
   $permissions = $permissionsManager->getList($newListPart);
   $permissionsList = $permissionsListManager->get($newListPart);
 
