@@ -14,7 +14,7 @@
 
   //If this is a redirection, we don't want to show the "-bounce" part to the user
   $isRedirection = false;
-  $listPart = preg_replace("/\@.*/", "", $listname);
+  $listPart = preg_replace("/(-bounce)*\@.*/", "", $listname);
   if($listPart == $currentAsso["login"]) {
     $isRedirection = true;
     $listname = $listPart . "-bounce" . SUFFIXE_MAIL;
@@ -56,17 +56,17 @@
 
   require_once("php/frags/header.php");
 ?>
-<div class="col-md-10 d-md-block" id="content">
+<div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Vous êtes actuellement abonné à <?= $displayAdress ?></h1>
     <p>Bonjour, bienvenue sur l'accueil de la mailing liste <?= $displayAdress ?></p>
     <p>Tu peux ici voir tes droits sur cette mailing liste et te désinscrire</p>
-    <p>La mailing liste est modérée ? <?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Non, tous les membres peuvent envoyer un mail" : "Oui, les admin doivent accepter les messages" ?></p>
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Droits sur <?= $displayAdress ?></h1>
-    <p>Droits d'administrateur ? <?= ($isAdmin) ? "Oui" : "Non" ?></p>
-    <p>Droit de passer outre la modération (si la liste est modérée) ? <?= ($canGoThroughModeration) ? "Oui" : "Non" ?></p>
+    <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
+    <span class="badge badge-pill badge-primary"><?= ($isAdmin) ? "Administrateur" : "Non administrateur" ?></span>
+    <span class="badge badge-pill badge-primary"><?= ($canGoThroughModeration) ? "Droit de passer outre la modération" : "Pas le droit de passer outre la modération" ?></span>
   </div>
   <div class="container bloc">
     <?php if(!preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $listPart)) : ?>

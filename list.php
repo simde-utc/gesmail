@@ -14,7 +14,7 @@
 
   //If this is a redirection, we don't want to show the "-bounce" part to the user
   $isRedirection = false;
-  $listPart = preg_replace("/\@.*/", "", $listname);
+  $listPart = preg_replace("/(-bounce)*\@.*/", "", $listname);
   if($listPart == $currentAsso["login"]) {
     $isRedirection = true;
     $listname = $listPart . "-bounce" . SUFFIXE_MAIL;
@@ -29,10 +29,13 @@
 
   try {
     $currentList = $sympaManager->info($listname, $currentAsso["login"] . SUFFIXE_MAIL)[0];
+    if(!$currentList)
+      die("Exception : Liste restreinte.");
   } catch (SoapFault $ex) {
     die("$ex->faultstring, <strong>Detail:</strong> $ex->detail $ex->faultcode Exception");
   }
 
+  //Check if user is bureau restreint
   $isBureauRestreint = false;
   foreach ($assosAdminPortail as $key => $ml) {
     if($ml["login"] == $currentAsso["login"])
@@ -56,13 +59,14 @@
 
   require_once("php/frags/header.php");
 ?>
-<div class="col-md-10 d-md-block" id="content">
+<div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil de <?= $displayAdress ?></h1>
     <p>Bonjour, bienvenue sur l'accueil de la mailing liste <?= $displayAdress ?>, tu peux ici modifier la mailing liste.</p>
     <p>Tu peux ici ajouter / supprimer des membres et gérer leurs droits.</p>
     <p>L'ajout / suppression / modification d'une adresse mail peut prendre jusqu'à 5 minutes.</p>
-    <p>La mailing liste est modérée ? <?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Non, tous les membres peuvent envoyer un mail" : "Oui, les admin doivent accepter les messages" ?></p>
+    <p>Les membres de la liste <?= $currentAsso["login"] . SUFFIXE_MAIL ?> auront le droit d'administrer les messages de cette liste.<p>
+    <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Liste des membres de <?= $displayAdress ?></h1>
@@ -76,7 +80,7 @@
       ?>
         <li class="input-group rowsEmail">
           <input type="email" value="<?= $mail ?>" class="form-control"></input>
-          <div class="input-group-append" role="group">
+          <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
             <select class="form-control permissionsSelects d-<?= ($isRedirection || !$isPortail) ? "none" : "block" ?>" >
               <option <?= ($isAdmin) ? "selected" : "" ?> value="1">Admin</option>
               <option <?= ($isAdmin) ? "" : "selected" ?> value="0">Non admin</option>
@@ -102,7 +106,7 @@
 </div>
 <li id="skeletonEmailRow" class="input-group rowsEmail">
   <input type="email" value="" class="form-control"></input>
-  <div class="input-group-append" role="group">
+  <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
     <select class="form-control permissionsSelects <?= $isRedirection ? "d-none" : "" ?>">
       <option value="1">Admin</option>
       <option selected value="0">Non admin</option>

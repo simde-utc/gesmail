@@ -17,8 +17,9 @@
     exit(json_encode(["status" => 1, "error" => "Format de liste incorrect"], JSON_UNESCAPED_UNICODE));
 
   //Do not delete a -bounce mailing list
-  if(preg_match("/(-bounce@)/", $listname))
-    exit(json_encode(["status" => 1, "error" => "Bounce est un mot réservé"], JSON_UNESCAPED_UNICODE));
+  if(preg_match("/(-bounce@)/", $listname) || preg_match("/(-tous@)/", $listname))
+    exit(json_encode(["status" => 1, "error" => "Bounce et tous sont des mots réservés"], JSON_UNESCAPED_UNICODE));
+
 
   //Please don't touch to automatic lists
   if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $listname))

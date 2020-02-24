@@ -32,8 +32,6 @@
 
       //Generate a token to prevent CSRF
       $_SESSION['oauth2state'] = $this->_provider->getState();
-
-      //Redirect user
       return $authorizationUrl;
     }
 
@@ -45,6 +43,6 @@
         $token,
         is_null($params) ? [] : $params //parameters (not mendatory)
       );
-      return $this->_provider->getParsedResponse($request); //Let's go !
+      return $this->_provider->getParsedResponse($request);
     }
   }

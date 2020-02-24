@@ -19,8 +19,8 @@
     exit(json_encode(["status" => 1, "error" => "Format de liste invalide"], JSON_UNESCAPED_UNICODE));
 
   //Do not create a -bounce mailing list
-  if(preg_match("/(-bounce@)/", $fullName . SUFFIXE_MAIL))
-    exit(json_encode(["status" => 1, "error" => "Bounce est un mot réservé"], JSON_UNESCAPED_UNICODE));
+  if(preg_match("/(-bounce@)/", $fullName . SUFFIXE_MAIL) || preg_match("/(-tous@)/", $fullName . SUFFIXE_MAIL))
+    exit(json_encode(["status" => 1, "error" => "Bounce et tous sont des mots réservés"], JSON_UNESCAPED_UNICODE));
 
   //Prevent everything that looks like an automatic name
   if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $fullName))

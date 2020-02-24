@@ -1,59 +1,135 @@
 <?php require_once($_SERVER["DOCUMENT_ROOT"] . "/agniacum/php/required.php"); ?>
+<!-- New version of left bar hopefully easier to understand !-->
 <nav class="navbar align-content-start flex-column align-items-baseline">
-  <!-- First, all the mailing lists where user is from asso with specific role -->
-  <p class="nav-link" href="#">Mailing listes des assos (rôle bureau restreint) :</p>
-  <?php foreach ($assosAdminPortail as $key => $asso) : ?>
-    <a class="nav" href="/agniacum/asso.php?asso=<?= $asso["login"] ?>">Mailing listes de <?= $asso["shortname"] ?></a>
+  <!-- First assos where user is bureau restreint -->
+  <p href="#">Mailing listes par association :</p>
+  <ul class="navbar list-unstyled">
+  <?php
+  foreach ($assosAdminPortail as $index => $asso) : //Show all lists (including automatic lists)?>
+      <li class="navitem"><a href="/agniacum/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (bureau restreint)</li>
+      <ul class="navbar">
+        <li><a href="/agniacum/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a></li>
+        <!-- We show all possile automatic lists -->
+        <li>Listes automatiques : </li>
+        <ul class="navbar list-unstyled">
+          <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) : ?>
+            <li><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></li>
+          <?php endforeach ?>
+        </ul>
+        <!--All lists where asso is owner -->
+        <li>Listes de l'association : </li>
+        <ul class="navbar list-unstyled">
+          <?php
+            $allListAsso = $sympaManager->lists($asso["login"] . SUFFIXE_MAIL);
+            usort($allListAsso, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
+            foreach ($allListAsso as $index => $list) :
+
+              if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress))
+                continue; //Do not show automatic lists
+
+              if(preg_match("/(-bounce@)/", $list->listAddress))
+                $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show the bounce part of email
+            ?>
+            <li><a href="/agniacum/list.php?asso=<?= $asso["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+        <?php
+        if(!empty($assosSubSympa[$asso["login"]])) :
+          ?><li>Listes où vous êtes inscrit : </li>
+          <ul class="navbar list-unstyled">
+            <?php
+              usort($assosSubSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
+              foreach ($assosSubSympa[$asso["login"]] as $list) :
+                if(preg_match("/(-bounce@)/", $list))
+                  $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
+                ?><li><a href="/agniacum/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+              endforeach;
+            ?>
+          </ul>
+          <?php
+        endif;
+      ?>
+      </ul>
     <?php
-      $orderdList = $sympaManager->lists($asso["login"] . SUFFIXE_MAIL);
-      usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
-      foreach ($orderdList as $index => $list) :
-
-        if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress)) //TODO: update here
-          continue; //Do not show automatic lists
-
-        if(preg_match("/(-bounce@)/", $list->listAddress))
-          $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce
+  endforeach;
+  ?>
+  <div class="border-top my-3"></div>
+  <!-- Now show lists for all members -->
+  <?php
+  foreach ($assosPosteAutoPortail as $index => $asso) : ?>
+    <li class="navitem"><?= $asso["shortname"] ?> : (membre de l'asso) </li>
+    <ul class="navbar">
+      <li>Listes automatiques : </li>
+      <ul class="navbar list-unstyled">
+      <?php
+      foreach (AUTOMATICSUFFIX as $key => $suffixe) :
+        ?><li><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></li><?php
+      endforeach;
+      ?>
+    </ul>
+    <?php
+      if(!empty($assosAdminSympa[$asso["login"]])) :
         ?>
-      <a class="nav-link navelem-lv-1" href="/agniacum/list.php?asso=<?= $asso["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a>
-    <?php endforeach ?>
-    <a class="nav-link navelem-lv-1" href="/agniacum/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a>
-  <?php endforeach ?>
-  <!-- Display automatic lists -->
-  <p class="nav">Mailing listes de <?= $asso["shortname"] ?> (pour les resps)</p>
-  <?php foreach ($assosPosteAutoPortail as $key => $asso) : ?>
-    <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) : ?>
-      <p class="nav-link navelem-lv-1 nolinks"><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></p>
-    <?php endforeach ?>
-  <?php endforeach ?>
-</nav>
-<hr/>
-<nav class="navbar align-content-start flex-column align-items-baseline">
-  <!-- Then, all the mailing lists where user has admin permission -->
-  <p class="nav-link" >Mailing listes que vous administrez :</p>
-  <?php
-    usort($assosAdminSympa, function ($ml1, $ml2) { return strcmp($ml1["list"], $ml2["list"]); });
-    foreach ($assosAdminSympa as $index => $list) :
-      if(preg_match("/(-bounce@)/", $list["list"]))
-        $list["list"] = $list["asso"] . SUFFIXE_MAIL; //Do not show bounce
-      ?>
-      <a class="nav-link navelem-lv-1" href="/agniacum/adminlist.php?asso=<?= $list["asso"] ?>&list=<?= $list["list"] ?>"><?= $list["list"] ?></a>
-  <?php endforeach ?>
-</nav>
-<hr/>
-<nav class="navbar align-content-start flex-column align-items-baseline">
-  <!-- last, all the mailing lists where user is a subscriber -->
-  <p class="nav-link" href="#">Mailing listes auxquelles vous êtes inscrit :</p>
-  <?php
-    $orderdList = $sympaManager->lists($resourceOwner["email"]);
-    usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
-    foreach ($orderdList as $index => $list) :
-      preg_match(REGEX_LOGINASSO, $list->listAddress, $loginAsso);
-      $assoSub = $portailManager->getPortail(PORTAIL_API_URL . "/assos/" . $loginAsso[0], $accessToken);
+        <li>Listes que vous administrez : </li>
+        <ul class="navbar list-unstyled">
+          <?php
+        usort($assosAdminSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
+          foreach ($assosAdminSympa[$asso["login"]] as $list) :
+            if(preg_match("/(-bounce@)/", $list))
+              $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
+            ?><li><a href="/agniacum/adminlist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+          endforeach;
+          ?>
+        </ul>
+        <?php
+      endif;
 
-      if(preg_match("/(-bounce@)/", $list->listAddress))
-        $list->listAddress = $assoSub["login"] . SUFFIXE_MAIL; //Do not show bounce parti of the email
+      if(!empty($assosSubSympa[$asso["login"]])) :
+        ?><li>Listes où vous êtes inscrit : </li>
+        <ul class="navbar list-unstyled">
+          <?php
+          usort($assosSubSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
+          foreach ($assosSubSympa[$asso["login"]] as $list) :
+            if(preg_match("/(-bounce@)/", $list))
+              $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
+            ?><li><a href="/agniacum/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+          endforeach;
+          ?>
+        </ul>
+      <?php
+      endif;
       ?>
-      <a class="nav-link navelem-lv-1" href="/agniacum/sublist.php?asso=<?= $assoSub["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a>
-  <?php endforeach ?>
+    </ul>
+    <?php
+  endforeach;
+  ?>
+  <div class="border-top my-3"></div>
+  <!-- Here, we show lists where user is subscribed / admin but not member of the asso -->
+  <?php
+  foreach ($assosOnlySubOrAdmin as $asso => $lists) :
+    ?><li class="navitem"><?= $asso ?> : (membre / admin d'une liste)</li>
+    <ul class="navbar">
+      <li>Admin</li>
+      <ul class="navbar list-unstyled">
+        <?php
+        foreach ($lists["admin"] as $index => $list) :
+          if(preg_match("/(-bounce@)/", $list))
+            $list = $asso . SUFFIXE_MAIL; //Do not show bounce
+            ?><li><a href="/agniacum/adminlist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+        endforeach; ?>
+      </ul>
+      <li>Subscriber</li>
+      <ul class="navbar list-unstyled">
+        <?php
+        foreach ($lists["subscriber"] as $index => $list) :
+          if(preg_match("/(-bounce@)/", $list))
+            $list = $asso . SUFFIXE_MAIL; //Do not show bounce
+              ?><li><a href="/agniacum/sublist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+        endforeach;
+        ?>
+      </ul>
+      <?php
+    endforeach;
+    ?>
+  </ul>
 </nav>

@@ -12,7 +12,7 @@
   if(array_key_exists("message", $currentAsso))
     die($currentAsso["message"]);
 
-
+  //check if user is bureau restreint
   $isBureauRestreint = false;
   foreach ($assosAdminPortail as $key => $ml) {
     if($ml["login"] == $currentAsso["login"])
@@ -23,7 +23,7 @@
 
   require_once("php/frags/header.php");
 ?>
-<div class="col-md-10 d-md-block" id="content">
+<div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil de <?= $currentAsso["name"] ?></h1>
     <p>Bonjour, bienvenu sur l'Accueil de l'asso <?= $currentAsso["name"] ?>, tu peux ici modifier / créer / supprimer des mailing listes.</p>
@@ -37,13 +37,14 @@
     <ul id="listOfMailingLists" suffix="<?= SUFFIXE_MAIL ?>">
       <?php
         $specificLists = [];
-        $orderdList = $sympaManager->lists($currentAsso["login"] . SUFFIXE_MAIL);
-        usort($orderdList, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
-        foreach ($orderdList as $index => $list) :
+        $allListsOfAsso = $sympaManager->lists($currentAsso["login"] . SUFFIXE_MAIL);
+        usort($allListsOfAsso, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
+        foreach ($allListsOfAsso as $index => $list) :
           //Do not show automatic lists nor automatic lists
           if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress))
             continue;
 
+          // If list is bounce, remove the -bounce part
           $isBounce = false;
           if(preg_match("/(-bounce)/", $list->listAddress)) {
             $list->listAddress = $currentAsso["login"] . SUFFIXE_MAIL;
@@ -55,13 +56,13 @@
         ?>
         <li class="input-group rowsEmail">
           <input class="form-control" value="<?= $list->listAddress ?>" disabled></input>
-          <div class="input-group-append" role="group">
+          <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
             <select class="form-control <?= ($isBounce) ? "d-none" : "" ?>">
               <option <?= (isset($default["send"]) && $default["send"]) ? "selected" : "" ?> value="1">Tous les membres peuvent envoyer un mail</option>
               <option <?= (isset($default["send"]) && $default["send"]) ? "" : "selected" ?> value="0">Liste modérée</option>
             </select>
             <button class="btn btn-primary updateListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Modifier</button>
-            <a class="btn btn-primary" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>&list=<?= $list->listAddress ?>" role="button">Détails</a>
+            <a class="btn btn-secondary noColor" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>&list=<?= $list->listAddress ?>" role="button">Détails</a>
             <button class="btn btn-danger deleteListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Supprimer</button>
           </div>
         </li>
@@ -84,13 +85,13 @@
 </div>
 <li id="skeletonMLRow" class="input-group rowsEmail">
   <input class="form-control" value="" disabled></input>
-  <div class="input-group-append" role="group">
+  <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
     <select class="form-control">
       <option selected value="1">Tous les membres</option>
       <option value="0">Liste modérée</option>
     </select>
     <button class="btn btn-primary updateListBtn" asso="<?= $currentAsso["login"] ?>" list="">Modifier</button>
-    <a class="btn btn-primary" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>" role="button">Détails</a>
+    <a class="btn btn-secondary noColor" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>" role="button">Détails</a>
     <button class="btn btn-danger deleteListBtn" asso="<?= $currentAsso["login"] ?>" list="">Supprimer</button>
   </div>
 </li>

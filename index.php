@@ -2,14 +2,14 @@
   require_once("php/required.php");
   require_once("php/frags/header.php");
 ?>
-<div class="col-md-10 d-md-block" id="content">
+<div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil du Gesmail</h1>
-    <p>Bienvenue sur le Gesmail, tu peux ici gérer les mailing listes de ton asso ou celles auxquelles tu est inscrit.</p>
-    <p>Dans le menu, il y a 3 catégories: les mailing listes de ton asso (si tu est membre du bureau restreint)(+ les mailing listes de rôle, si tu est resp), les mailing listes que tu administre et les mailing listes auxquelles tu est inscrit.</p>
+    <p>Bienvenue sur le Gesmail, tu peux ici gérer les mailing listes de ton asso ainsi que celles auxquelles tu est inscrit.</p>
+    <p>Le menu liste les assos pour lesquelles des listes te concernent. Les mailing listes sont triées selon 3 types de droits<p>
   </div>
   <div class="container bloc">
-    <h1 class="text-center text-break">Menu d'asso</h1>
+    <h1 class="text-center text-break">Droit d'asso (Bureau restreint)</h1>
     <p>Pour les mailing listes de ton asso, tu peux : créer et supprimer des listes, mettre en place la modération, gérer les membres et leur droits sur la liste.</p>
     <p>Tu peux aussi gérer les personnes qui recevront les mails de l'asso.</p>
     <p>Les membres de la liste qui ne sont pas présents sur le portail ne pourront pas avoir de droits sur la mailing liste.</p>
@@ -23,7 +23,7 @@
   <div class="container bloc">
     <h1 class="text-center text-break">Menu perso</h1>
     <p>Dans ce menu, tu peux voir toutes les mailing listes auxquelles tu est inscrit.</p>
-    <p>Tu recevra les messages pour toutes ces listes. Tu peux aussi, pour chaque liste, consulter tes droits et te désinscrire.</p>
+    <p>Tu recevras les messages pour toutes ces listes. Tu peux aussi, pour chaque liste, consulter tes droits et te désinscrire.</p>
   </div>
 </div>
 <?php

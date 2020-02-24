@@ -8,7 +8,7 @@
   if(!isset($_GET["list"]) || empty($_GET["list"]))
     header("Location: /agniacum/");
 
-  //Check is asso exists
+  //get asso
   $currentAsso = $portailManager->getPortail(PORTAIL_API_URL . "/assos/" . htmlspecialchars($_GET["asso"]), $accessToken);
   $listname = htmlspecialchars($_GET["list"]);
 
@@ -25,31 +25,32 @@
     die("$ex->faultstring, <strong>Detail:</strong> $ex->detail $ex->faultcode Exception");
   }
 
-  //Get the part before the @
-  $listPart = preg_replace("/\@.*/", "", $currentList->listAddress);
+  //Get the part before the @ (and eventually -bounce)
+  $listPart = preg_replace("/(-bounce)*\@.*/", "", $currentList->listAddress);
 
+  //Get permissions and reject non admin users
   $userPerms = $permissionsManager->get($resourceOwner["email"], $listPart);
   if(!isset($userPerms["admin"]) || !$userPerms["admin"])
     die("Vous devez être administrateur pour acceder à cette liste");
 
-  //Get all subscribers of this list
+  //Get all subscribers of this list and the permissions of list (moderated or not)
   $listMembers = $sympaManager->review($currentList->listAddress, $currentAsso["login"] . SUFFIXE_MAIL);
   $permissionsList = $permissionsListManager->get($listPart);
 
-  //Get all permissions on this list
+  //Get all users permissions on this list
   $permissions = $permissionsManager->getList($listPart);
 
   if($listMembers[0] == "no_subscribers") unset($listMembers[0]);
 
   require_once("php/frags/header.php");
 ?>
-<div class="col-md-10 d-md-block" id="content">
+<div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil de <?= $currentList->listAddress ?></h1>
     <p>Bonjour, bienvenue sur l'accueil de la mailing liste <?= $currentList->listAddress ?>, tu peux ici modifier la mailing liste.</p>
     <p>Tu peux ici ajouter / supprimer des membres et gérer leurs droits.</p>
     <p>L'ajout / suppression / modification d'une adresse mail peut prendre jusqu'à 5 minutes.</p>
-    <p>La mailing liste est modérée ? <?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Non, tous les membres peuvent envoyer un mail" : "Oui, les admin doivent accepter les messages" ?></p>
+    <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Liste des membres de <?= $currentList->listAddress ?></h1>
@@ -63,7 +64,7 @@
         ?>
         <li class="input-group rowsEmail">
           <input type="email" value="<?= $mail ?>" class="form-control"></input>
-          <div class="input-group-append" role="group">
+          <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
             <select class="form-control permissionsSelects d-<?= (!$isPortail) ? "none" : "block" ?>">
               <option <?= ($canGoThroughModeration) ? "selected" : "" ?> value="1">Peut outrepasser la modération</option>
               <option <?= ($canGoThroughModeration) ? "" : "selected" ?> value="0">Ne peut pas outrepasser la modération</option>
@@ -85,7 +86,7 @@
 </div>
 <li id="skeletonEmailRow" class="input-group rowsEmail">
   <input type="email" value="" class="form-control"></input>
-  <div class="input-group-append" role="group">
+  <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
     <select class="form-control permissionsSelects">
       <option value="1">Peut outrepasser la modération</option>
       <option selected value="0">Ne peut pas outrepasser la modération</option>

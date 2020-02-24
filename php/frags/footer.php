@@ -2,7 +2,11 @@
     </div>
     <div class="container-fluid">
       <hr>
-      <footer class="text-right">
+      <footer class="d-flex justify-content-between">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="darkSwitch" />
+          <label class="custom-control-label" for="darkSwitch">Thème sombre</label>
+        </div>
         <p>&copy; SiMDE 2019</p>
       </footer>
     </div>
@@ -14,6 +18,7 @@
     </div>
   </body>
   <script src="js/all.js"></script>
+  <script src="js/dark.js"></script>
   <script>
     document.getElementById("toggleMenuButton").addEventListener("click", function(evt) {
       document.getElementById("leftMenu").classList.toggle("d-none");

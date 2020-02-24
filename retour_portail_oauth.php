@@ -8,8 +8,6 @@
 
   require_once("php/required.php");
 
-  //TODO: Gérer le cas où l'utilisateur refuse (même si ça devrait pas arriver)
-
   //Si le state enregistré précedemment est différent ou n'existe pas, soit la session a expiré soit l'utilisateur est malveillant
   if (empty($_GET['state']) || (isset($_SESSION['oauth2state']) && $_GET['state'] !== $_SESSION['oauth2state'])) {
       //On détruit le state (on peut tenter de le faire se reconnecter)
@@ -25,11 +23,6 @@
           $accessToken = $oauthProvider->getAccessToken('authorization_code', [
               'code' => $_GET['code']
           ]);
-
-          echo 'Access Token: ' . $accessToken->getToken() . "<br>";
-          echo 'Refresh Token: ' . $accessToken->getRefreshToken() . "<br>";
-          echo 'Expires dans : ' . $accessToken->getExpires() . "<br>";
-          echo 'Expiré ? ' . ($accessToken->hasExpired() ? 'expiré' : 'non expiré') . "<br>";
 
           //On sauvegarde l'access token dans la session
           $_SESSION["access_token"] = $accessToken->jsonSerialize();
