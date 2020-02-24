@@ -54,8 +54,6 @@
                    !isset($params) ? [] : $params //parameters (not mendatory)
           );
           $user = $oauthClientProvider->getParsedResponse($request); //Let's go !
-//            echo $user["email"] . "\n";
+          echo $user["email"] . "\n";
       }
-echo "noe.amiot@etu.utc.fr\n";
-echo "amiot.noe@icloud.com\n";
 ?>
