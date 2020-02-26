@@ -47,6 +47,11 @@
         $members = $oauthClientProvider->getParsedResponse($request); //Let's go !
         //var_dump($members);
         foreach($members as $member) {
+          
+          //Prevent users not accepted in the association from viewing anything (portail will fix this)
+          if(!isset($member["pivot"]["validated_by_id"]) || is_null($member["pivot"]["validated_by_id"]))
+            continue;
+
           $request = $oauthClientProvider->getAuthenticatedRequest(
                   'GET', //Protocol
                    PORTAIL_API_URL . "/users/" . $member["id"], //Url to call

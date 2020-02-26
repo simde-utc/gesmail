@@ -87,6 +87,11 @@
     $assosAdminPortail = [];
     $assosPosteAutoPortail = [];
     foreach ($userAssos as $key => $asso) {
+
+      //Prevent users not accepted in the association from viewing anything (portail will fix this)
+      if(!isset($asso["pivot"]["validated_by_id"]) || is_null($asso["pivot"]["validated_by_id"]))
+        continue;
+
       if(array_key_exists($asso["pivot"]["role_id"], $bureauRestreintRoles))
         $assosAdminPortail[$asso["login"]] = $asso;
       else if(array_key_exists($asso["pivot"]["role_id"], $postesAutoRoles))

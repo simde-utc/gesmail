@@ -64,8 +64,13 @@
     !isset($params) ? [] : $params //parameters (not mendatory)
   );
   $members = $oauthClientProvider->getParsedResponse($request); //Let's go !
-  
+
   foreach($members as $member) {
+    
+    //Prevent users not accepted in the association from viewing anything (portail will fix this)
+    if(!isset($member["pivot"]["validated_by_id"]) || is_null($member["pivot"]["validated_by_id"]))
+      continue;
+
     if(in_array($member["pivot"]["role_id"], $allroles[$_GET["range"]])) {
       $request = $oauthClientProvider->getAuthenticatedRequest(
         'GET', //Protocol
