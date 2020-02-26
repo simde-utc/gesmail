@@ -26,14 +26,11 @@
 <div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil de <?= $currentAsso["name"] ?></h1>
-    <p>Bonjour, bienvenu sur l'Accueil de l'asso <?= $currentAsso["name"] ?>, tu peux ici modifier / créer / supprimer des mailing listes.</p>
-    <p>Tu peux aussi modifier les droits des membres de ces listes</p>
+    <p>Bienvenue sur l'Accueil de l'association <?= $currentAsso["name"] ?>, tu peux ici modifier / créer / supprimer des mailing listes.</p>
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Liste des mailing listes <?= $currentAsso["name"] ?></h1>
-    <p>Bonjour, bienvenu sur le Gesmail, tu peux ici gérer toutes les mailing listes des assos auxquelles tu est inscrit sur le portail.</p>
-    <p>Pour commencer, tu peux sélectionner une asso dans le menu de gauche et gérer les redirections ou ajouter / modifier les mailing listes</p>
-    <p>Pour chaque mailing liste, tu pourra ajouter / supprimer des membres, gérer les droits (notamment concernant l'envoi de mails et la modération).</p>
+    <p>Pour chaque mailing liste, tu peux ajouter / supprimer des membres, gérer les droits (notamment concernant l'envoi de mails et la modération) en cliquant sur "détails".</p>
     <ul id="listOfMailingLists" suffix="<?= SUFFIXE_MAIL ?>">
       <?php
         $specificLists = [];

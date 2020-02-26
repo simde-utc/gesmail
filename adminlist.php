@@ -47,9 +47,9 @@
 <div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil de <?= $currentList->listAddress ?></h1>
-    <p>Bonjour, bienvenue sur l'accueil de la mailing liste <?= $currentList->listAddress ?>, tu peux ici modifier la mailing liste.</p>
-    <p>Tu peux ici ajouter / supprimer des membres et gérer leurs droits.</p>
-    <p>L'ajout / suppression / modification d'une adresse mail peut prendre jusqu'à 5 minutes.</p>
+    <p>Bienvenue sur l'accueil de la mailing liste <?= $currentList->listAddress ?>, tu peux ici modifier toutes les informations concernant la mailing liste.</p>
+    <p>Tu peux ajouter / supprimer des membres et gérer leurs droits.</p>
+    <p>Certaines tâches d'administration peuvent prendre jusqu'à 5 minutes.</p>
     <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
   </div>
   <div class="container bloc">

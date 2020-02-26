@@ -59,7 +59,7 @@
 <div class="col-md-9 d-md-block" id="content">
   <div class="container bloc">
     <h1 class="text-center text-break">Vous êtes actuellement abonné à <?= $displayAdress ?></h1>
-    <p>Bonjour, bienvenue sur l'accueil de la mailing liste <?= $displayAdress ?></p>
+    <p>Bienvenue sur l'accueil de la mailing liste <?= $displayAdress ?></p>
     <p>Tu peux ici voir tes droits sur cette mailing liste et te désinscrire</p>
   </div>
   <div class="container bloc">
@@ -69,7 +69,7 @@
     <span class="badge badge-pill badge-primary"><?= ($canGoThroughModeration) ? "Droit de passer outre la modération" : "Pas le droit de passer outre la modération" ?></span>
   </div>
   <div class="container bloc">
-    <?php if(!preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $listPart)) : ?>
+  <?php if(!preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $listPart)) : ?>
     <h1 class="text-center text-break">Se désinscrire de <?= $displayAdress ?></h1>
     <div class="input-group">
       <input type="text" class="form-control" type="email" value="<?= $resourceOwner["email"] ?>" disabled></input>
