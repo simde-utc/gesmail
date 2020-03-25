@@ -3,7 +3,7 @@
 
   //ensure everything is defined && setted
   if(!isset($_GET["asso"]) || empty($_GET["asso"]))
-    header("Location: /agniacum/");
+    header("Location: /gesmail/");
 
   //Get the asso and ensure user is a member
   $currentAsso = $portailManager->getPortail(PORTAIL_API_URL . "/user/assos/" . htmlspecialchars($_GET["asso"]), $accessToken);
@@ -59,7 +59,7 @@
               <option <?= (isset($default["send"]) && $default["send"]) ? "" : "selected" ?> value="0">Liste modérée</option>
             </select>
             <button class="btn btn-primary updateListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Modifier</button>
-            <a class="btn btn-secondary noColor" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>&list=<?= $list->listAddress ?>" role="button">Détails</a>
+            <a class="btn btn-secondary noColor" href="/gesmail/list.php?asso=<?= $currentAsso["login"] ?>&list=<?= $list->listAddress ?>" role="button">Détails</a>
             <button class="btn btn-danger deleteListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Supprimer</button>
           </div>
         </li>
@@ -88,7 +88,7 @@
       <option value="0">Liste modérée</option>
     </select>
     <button class="btn btn-primary updateListBtn" asso="<?= $currentAsso["login"] ?>" list="">Modifier</button>
-    <a class="btn btn-secondary noColor" href="/agniacum/list.php?asso=<?= $currentAsso["login"] ?>" role="button">Détails</a>
+    <a class="btn btn-secondary noColor" href="/gesmail/list.php?asso=<?= $currentAsso["login"] ?>" role="button">Détails</a>
     <button class="btn btn-danger deleteListBtn" asso="<?= $currentAsso["login"] ?>" list="">Supprimer</button>
   </div>
 </li>

@@ -3,11 +3,11 @@
   session_start();
 
   //Connect to db
-  $db = new PDO("mysql:host=localhost;dbname=mails;charset=utf8", USER_DB, PASSWD_DB); //best password
+  $db = new PDO("mysql:host=" . HOST_DB . ";dbname=" . NAME_DB . ";charset=utf8", USER_DB, PASSWD_DB); //best password
   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   // Include Oauth Php client
-  require_once($_SERVER["DOCUMENT_ROOT"] . "/agniacum/vendor/autoload.php");
+  require_once($_SERVER["DOCUMENT_ROOT"] . "/gesmail/vendor/autoload.php");
 
   // Define a few constants
   const PORTAIL_API_URL = ASSO_SERV_URL . "/api/v1";
@@ -15,9 +15,9 @@
 
   //Oauth user provider --> portail des assos
   $oauthProvider = new \League\OAuth2\Client\Provider\GenericProvider([
-    'clientId'                => PORTAIL_CLIENT_ID,
-    'clientSecret'            => PORTAIL_CLIENT_PASSWD,
-    'redirectUri'             => PORTAIL_RETURN_URI,
+    'clientId'                => PORTAIL_USER_ID,
+    'clientSecret'            => PORTAIL_USER_PASSWD,
+    'redirectUri'             => PORTAIL_USER_RETURN_URI,
     'scopes'                  => "user-get-info user-get-assos user-get-roles",
     'urlAuthorize'            => ASSO_SERV_URL . "oauth/authorize",
     'urlAccessToken'          => ASSO_SERV_URL . "oauth/token",
@@ -28,7 +28,7 @@
   $oauthClientProvider = new \League\OAuth2\Client\Provider\GenericProvider([
     'clientId'                => PORTAIL_CLIENT_ID,
     'clientSecret'            => PORTAIL_CLIENT_PASSWD,
-    'redirectUri'             => PORTAIL_RETURN_URI,
+    'redirectUri'             => PORTAIL_CLIENT_RETURN_URI,
     'scopes'                  => "client-get-users-active",
     'urlAuthorize'            => ASSO_SERV_URL . "oauth/authorize",
     'urlAccessToken'          => ASSO_SERV_URL . "oauth/token",
@@ -36,7 +36,7 @@
   ]);
 
   //include php classes
-  $classesPath = $_SERVER["DOCUMENT_ROOT"] . "/agniacum/php/classes/";
+  $classesPath = $_SERVER["DOCUMENT_ROOT"] . "/gesmail/php/classes/";
   require($classesPath . "PortailManager.class.php");
   require($classesPath . "SympaManager.class.php");
   require($classesPath . "PermissionsManager.class.php");
@@ -51,7 +51,7 @@
   //If no access token, get one
   if(isset($_SESSION["access_token"]) && !empty($_SESSION["access_token"])) {
     $accessToken = $portailManager->getAccessTokenOrRenew($_SESSION["access_token"]);
-  } elseif($_SERVER['PHP_SELF'] != "/agniacum/retour_portail_oauth.php") { //If user is connecting
+  } elseif($_SERVER['PHP_SELF'] != "/gesmail/retour_portail_oauth.php") { //If user is connecting
     $authorizationUrl = $portailManager->getAuthUrl();
     header('Location: ' . $authorizationUrl);
   }

@@ -28,7 +28,7 @@
           $_SESSION["access_token"] = $accessToken->jsonSerialize();
 
           //On redirige l'utillisateur
-          header("Location: /agniacum/");
+          header("Location: /gesmail/");
           exit;
       } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
           //Une erreur a eu lieu pendant la récupération du token.

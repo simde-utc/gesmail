@@ -3,10 +3,10 @@
 
   //ensure everything is defined && setted
   if(!isset($_GET["asso"]) || empty($_GET["asso"]))
-    header("Location: /agniacum/");
+    header("Location: /gesmail/");
 
   if(!isset($_GET["list"]) || empty($_GET["list"]))
-    header("Location: /agniacum/");
+    header("Location: /gesmail/");
 
   //get asso
   $currentAsso = $portailManager->getPortail(PORTAIL_API_URL . "/assos/" . htmlspecialchars($_GET["asso"]), $accessToken);

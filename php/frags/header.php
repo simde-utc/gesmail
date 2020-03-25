@@ -15,7 +15,7 @@
           <button id="toggleMenuButton" type="button" class="btn btn-default d-block d-md-none position-absolute" style="left: 0;margin-top: 4%;">
             <i class="fas fa-bars fa-2x iconmenu"></i>
           </button>
-          <a class="navbar-brand" href="/agniacum/">SiMDE|Gesmail</a>
+          <a class="navbar-brand" href="/gesmail/">SiMDE|Gesmail</a>
           <p class="navbar-text text-center" style="margin: auto 0;">Connecté en tant que <?= $resourceOwner["name"] ?> <a href="php/logout.php">Déconnexion</a></p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/agniacum/php/required.php"); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/gesmail/php/required.php"); ?>
 <!-- New version of left bar hopefully easier to understand !-->
 <nav class="navbar align-content-start flex-column align-items-baseline">
   <!-- First assos where user is bureau restreint -->
@@ -6,9 +6,9 @@
   <ul class="navbar list-unstyled">
   <?php
   foreach ($assosAdminPortail as $index => $asso) : //Show all lists (including automatic lists)?>
-      <li class="navitem"><a href="/agniacum/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (bureau restreint)</li>
+      <li class="navitem"><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (bureau restreint)</li>
       <ul class="navbar">
-        <li><a href="/agniacum/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a></li>
+        <li><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a></li>
         <!-- We show all possile automatic lists -->
         <li>Listes automatiques : </li>
         <ul class="navbar list-unstyled">
@@ -30,7 +30,7 @@
               if(preg_match("/(-bounce@)/", $list->listAddress))
                 $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show the bounce part of email
             ?>
-            <li><a href="/agniacum/list.php?asso=<?= $asso["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a></li>
+            <li><a href="/gesmail/list.php?asso=<?= $asso["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a></li>
           <?php endforeach; ?>
         </ul>
         <?php
@@ -42,7 +42,7 @@
               foreach ($assosSubSympa[$asso["login"]] as $list) :
                 if(preg_match("/(-bounce@)/", $list))
                   $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
-                ?><li><a href="/agniacum/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+                ?><li><a href="/gesmail/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
               endforeach;
             ?>
           </ul>
@@ -77,7 +77,7 @@
           foreach ($assosAdminSympa[$asso["login"]] as $list) :
             if(preg_match("/(-bounce@)/", $list))
               $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
-            ?><li><a href="/agniacum/adminlist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+            ?><li><a href="/gesmail/adminlist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
           endforeach;
           ?>
         </ul>
@@ -92,7 +92,7 @@
           foreach ($assosSubSympa[$asso["login"]] as $list) :
             if(preg_match("/(-bounce@)/", $list))
               $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
-            ?><li><a href="/agniacum/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+            ?><li><a href="/gesmail/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
           endforeach;
           ?>
         </ul>
@@ -115,7 +115,7 @@
         foreach ($lists["admin"] as $index => $list) :
           if(preg_match("/(-bounce@)/", $list))
             $list = $asso . SUFFIXE_MAIL; //Do not show bounce
-            ?><li><a href="/agniacum/adminlist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+            ?><li><a href="/gesmail/adminlist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
         endforeach; ?>
       </ul>
       <li>Subscriber</li>
@@ -124,7 +124,7 @@
         foreach ($lists["subscriber"] as $index => $list) :
           if(preg_match("/(-bounce@)/", $list))
             $list = $asso . SUFFIXE_MAIL; //Do not show bounce
-              ?><li><a href="/agniacum/sublist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
+              ?><li><a href="/gesmail/sublist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
         endforeach;
         ?>
       </ul>
