@@ -10,7 +10,7 @@
         $oauthClientProvider = new \League\OAuth2\Client\Provider\GenericProvider([
                 'clientId'                => PORTAIL_CLIENT_ID,
                 'clientSecret'            => PORTAIL_CLIENT_PASSWD,
-                'redirectUri'             => PORTAIL_RETURN_URI,
+                'redirectUri'             => PORTAIL_CLIENT_RETURN_URI,
                 'scopes'                  => "client-get-users-active",
                 'urlAuthorize'            => ASSO_SERV_URL . "oauth/authorize",
                 'urlAccessToken'          => ASSO_SERV_URL . "oauth/token",

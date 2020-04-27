@@ -1,2 +1,5 @@
+
 vendor
 php/env.php
+php/remote_lists/.htaccess
+php/remote_lists/.htpasswd
