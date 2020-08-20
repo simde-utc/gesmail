@@ -1,4 +1,4 @@
-<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/gesmail/php/required.php"); ?>
+<?php require_once(BASE_ROOT_GESMAIL . "/php/required.php"); ?>
 <!-- New version of left bar hopefully easier to understand !-->
 <nav class="navbar align-content-start flex-column align-items-baseline">
   <!-- First assos where user is bureau restreint -->

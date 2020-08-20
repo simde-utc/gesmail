@@ -7,7 +7,7 @@
   $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   // Include Oauth Php client
-  require_once($_SERVER["DOCUMENT_ROOT"] . "/gesmail/vendor/autoload.php");
+  require_once(BASE_ROOT_GESMAIL . "/vendor/autoload.php");
 
   // Define a few constants
   const PORTAIL_API_URL = ASSO_SERV_URL . "/api/v1";
@@ -36,7 +36,7 @@
   ]);
 
   //include php classes
-  $classesPath = $_SERVER["DOCUMENT_ROOT"] . "/gesmail/php/classes/";
+  $classesPath = BASE_ROOT_GESMAIL . "/php/classes/";
   require($classesPath . "PortailManager.class.php");
   require($classesPath . "SympaManager.class.php");
   require($classesPath . "PermissionsManager.class.php");
