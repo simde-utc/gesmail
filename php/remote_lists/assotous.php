@@ -60,5 +60,6 @@
           );
           $user = $oauthClientProvider->getParsedResponse($request); //Let's go !
           echo $user["email"] . "\n";
-      }
+        }
+        echo $assotarget["login"] . SUFFIXE_MAIL . "\n";
 ?>
