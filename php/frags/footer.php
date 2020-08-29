@@ -7,7 +7,9 @@
           <input type="checkbox" class="custom-control-input" id="darkSwitch" />
           <label class="custom-control-label" for="darkSwitch">Thème sombre</label>
         </div>
-        <p>&copy; SiMDE 2019</p>
+        <span class="mb-2">
+          <i class="fa fa-code" aria-hidden="true"></i> avec le <i class="fa fa-heart" aria-hidden="true"></i> par Noé AMIOT
+        </span>
       </footer>
     </div>
     <div id="messageBox" role="alert" class="container-fluid alert alert-warning alert-dismissible fade show d-none">
