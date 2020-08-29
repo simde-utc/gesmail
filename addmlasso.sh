@@ -48,5 +48,5 @@ if [ "$acreer" = "bounce" -o "$acreer" = "both" ]; then
 fi
 
 if [ "$acreer" = "tous" -o "$acreer" = "both" ]; then
-        writeList "$1" "tous" "redirections"
+        writeList "$1" "tous" "assostous"
 fi
