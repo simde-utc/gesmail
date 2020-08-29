@@ -35,7 +35,7 @@ echo "  <subject>$1</subject>" >> $file
 echo "  <status>open</status>" >> $file
 echo "  <topic>$3</topic>" >> $file
 echo "  <owner>" >> $file
-echo "          <email>$1@noeamiot.fr</email>" >> $file
+echo "          <email>$1@assos.utc.fr</email>" >> $file
 echo "  </owner>" >> $file
 echo "</list>" >> $file
 
@@ -45,4 +45,8 @@ rm $file
 
 if [ "$acreer" = "bounce" -o "$acreer" = "both" ]; then
         writeList "$1" "bounce" "redirections"
+fi
+
+if [ "$acreer" = "tous" -o "$acreer" = "both" ]; then
+        writeList "$1" "tous" "redirections"
 fi
