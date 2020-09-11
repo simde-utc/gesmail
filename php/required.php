@@ -11,7 +11,7 @@
 
   // Define a few constants
   const PORTAIL_API_URL = ASSO_SERV_URL . "/api/v1";
-  const AUTOMATICSUFFIX = ["bureau", "bureaurestreint", "com", "info", "log", "partenariat", "anim"];
+  const AUTOMATICSUFFIX = ["tous", "bureaurestreint", "bureau", "com", "info", "log", "partenariat", "anim"];
 
   //Oauth user provider --> portail des assos
   $oauthProvider = new \League\OAuth2\Client\Provider\GenericProvider([

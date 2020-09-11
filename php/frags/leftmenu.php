@@ -40,6 +40,8 @@
             <?php
               usort($assosSubSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
               foreach ($assosSubSympa[$asso["login"]] as $list) :
+		if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list))
+                  continue; //Do not show automatic lists
                 if(preg_match("/(-bounce@)/", $list))
                   $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
                 ?><li><a href="/gesmail/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
@@ -90,6 +92,8 @@
           <?php
           usort($assosSubSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
           foreach ($assosSubSympa[$asso["login"]] as $list) :
+	    if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list))
+                continue; //Do not show automatic lists
             if(preg_match("/(-bounce@)/", $list))
               $list = $asso["login"] . SUFFIXE_MAIL; //Do not show bounce (should not be here anyway)
             ?><li><a href="/gesmail/sublist.php?asso=<?= $asso["login"] ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
@@ -122,6 +126,8 @@
       <ul class="navbar list-unstyled">
         <?php
         foreach ($lists["subscriber"] as $index => $list) :
+	  if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list))
+                continue; //Do not show automatic lists
           if(preg_match("/(-bounce@)/", $list))
             $list = $asso . SUFFIXE_MAIL; //Do not show bounce
               ?><li><a href="/gesmail/sublist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
