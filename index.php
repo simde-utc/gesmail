@@ -6,6 +6,7 @@
   <div class="container bloc">
     <h1 class="text-center text-break">Accueil du Gesmail</h1>
     <p>Bienvenue sur le Gesmail, tu peux ici gérer les mailing listes de ton asso ainsi que celles auxquelles tu est inscrit.</p>
+    <p>La documentation pour les membres et associations est <a href="https://simde.gitlab.utc.fr/documentation/#/gesmail/">accessible ici</a> !</p>
     <p>Le menu liste les assos pour lesquelles des listes te concernent. Il existe trois types de droits.<p>
   </div>
   <div class="container bloc">
@@ -23,6 +24,14 @@
     <h1 class="text-center text-break">Droit personnel</h1>
     <p>Pour chaque mailing liste où tu est inscrit, tu possède le droit de te désinscrire.</p>
     <p>Tu recevras les messages pour toutes ces listes. Tu peux aussi, pour chaque liste, consulter tes droits.</p>
+  </div>
+  <div class="container bloc">
+    <h1 class="text-center text-break">Les types de listes :</h1>
+    <p>Il existe trois types de mailing listes : </p>
+    <p>Les redirections : de la forme loginasso@assos.utc.fr, elles permettent de gérer qui reçoit les emails adressés à l'association</p>
+    <p>Les listes automatiques : accessibles pour tous les membres de l'association, elles permettent de cibler un rôle donné dans l'association.</p>
+    <p>Les listes classiques : des listes pour créer des groupes de membres, des mailing listes quoi !</p>
+    <p>Note : la liste automatique -tous cible tous les membres de l'association cependant seule l'adresse de l'association peut envoyer un mail dessus.</p>
   </div>
 </div>
 <?php
