@@ -18,11 +18,11 @@
   <div class="container bloc">
     <h1 class="text-center text-break">Droit d'administration</h1>
     <p>Ce droit te permet d'ajouter / supprimer des utilisateurs sur des mailing listes, et, si la mailing liste est modérée, de choisir qui peut envoyer un mail sans passer par la modération.</p>
-    <p>Pour chaque mailing liste où tu est administrateur, les messages nécessitant la modération te seront envoyés et tu pourra les accepter / les refuser.</p>
+    <p>Pour chaque mailing liste où tu es administrateur, les messages nécessitant la modération te seront envoyés et tu pourras les accepter / les refuser.</p>
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Droit personnel</h1>
-    <p>Pour chaque mailing liste où tu est inscrit, tu possède le droit de te désinscrire.</p>
+    <p>Pour chaque mailing liste où tu es inscrit, tu possèdes le droit de te désinscrire.</p>
     <p>Tu recevras les messages pour toutes ces listes. Tu peux aussi, pour chaque liste, consulter tes droits.</p>
   </div>
   <div class="container bloc">
@@ -31,7 +31,7 @@
     <p>Les redirections : de la forme loginasso@assos.utc.fr, elles permettent de gérer qui reçoit les emails adressés à l'association</p>
     <p>Les listes automatiques : accessibles pour tous les membres de l'association, elles permettent de cibler un rôle donné dans l'association.</p>
     <p>Les listes classiques : des listes pour créer des groupes de membres, des mailing listes quoi !</p>
-    <p>Note : la liste automatique -tous cible tous les membres de l'association cependant seule l'adresse de l'association peut envoyer un mail dessus.</p>
+    <p>Note : la liste automatique '-tous' cible tous les membres de l'association cependant seule l'adresse de l'association peut envoyer un mail dessus.</p>
   </div>
 </div>
 <?php
