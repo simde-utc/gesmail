@@ -6,7 +6,7 @@
   <ul class="navbar list-unstyled">
   <?php
   foreach ($assosAdminPortail as $index => $asso) : //Show all lists (including automatic lists)?>
-      <li class="navitem"><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (bureau restreint)</li>
+      <li class="navitem"><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (accès complets)</li>
       <ul class="navbar">
         <li><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a></li>
         <!-- We show all possile automatic lists -->

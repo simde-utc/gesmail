@@ -74,14 +74,16 @@
 
     //Get all possible roles (to check privileges on each),
     $roles = $portailManager->getPortail(PORTAIL_API_URL . "/roles/", $accessToken);
-    $bureauRestreintRoles = [];
+    $fullAccessRoles = [];
     $postesAutoRoles = [];
     foreach ($roles as $key => $role) {
       if($role["position"] <= 10 && !is_null($role["position"]))
-        $bureauRestreintRoles[$role["id"]] = $role;
+        $fullAccessRoles[$role["id"]] = $role;
       if($role["owned_by"]["model"] != "group")
         $postesAutoRoles[$role["id"]] = $role;
     }
+
+    $fullAccessRoles[RESP_INFO_ROLE_ID] = [];
 
     // All assos where user is bureau restreint
     $assosAdminPortail = [];
@@ -92,7 +94,7 @@
       if(!isset($asso["pivot"]["validated_by_id"]) || is_null($asso["pivot"]["validated_by_id"]))
         continue;
 
-      if(array_key_exists($asso["pivot"]["role_id"], $bureauRestreintRoles))
+      if(array_key_exists($asso["pivot"]["role_id"], $fullAccessRoles))
         $assosAdminPortail[$asso["login"]] = $asso;
       else if(array_key_exists($asso["pivot"]["role_id"], $postesAutoRoles))
         $assosPosteAutoPortail[$asso["login"]] = $asso;
