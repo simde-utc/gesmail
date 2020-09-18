@@ -20,6 +20,7 @@
         <li>Listes de l'association : </li>
         <ul class="navbar list-unstyled">
           <?php
+	    $assoSubscribedToList = array();
             $allListAsso = $sympaManager->lists($asso["login"] . SUFFIXE_MAIL);
             usort($allListAsso, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
             foreach ($allListAsso as $index => $list) :
@@ -27,13 +28,31 @@
               if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress))
                 continue; //Do not show automatic lists
 
+	      //If asso is subscribed to another asso list
+	      if(!$list->isOwner) {
+		$assoSubscribedToList[] = $list;
+		continue;
+	      }
+
               if(preg_match("/(-bounce@)/", $list->listAddress))
                 $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show the bounce part of email
             ?>
             <li><a href="/gesmail/list.php?asso=<?= $asso["login"] ?>&list=<?= $list->listAddress ?>"><?= $list->listAddress ?></a></li>
           <?php endforeach; ?>
         </ul>
+	<?php
+	if(!empty($assoSubscribedToList)) : ?>
+	<li>Listes auxquelles votre association est inscrite :</li>
+	<ul class="navbar list-unstyled">
+          <?php foreach ($assoSubscribedToList as $key => $list) :
+	    if(preg_match("/(-bounce@)/", $list->listAddress))
+                $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show the bounce part of email
+	    ?>
+            <li><?= $list->listAddress ?></li>
+          <?php endforeach ?>
+        </ul>
         <?php
+	endif;
         if(!empty($assosSubSympa[$asso["login"]])) :
           ?><li>Listes où vous êtes inscrit : </li>
           <ul class="navbar list-unstyled">
