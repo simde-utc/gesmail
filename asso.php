@@ -41,6 +41,9 @@
           if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress))
             continue;
 
+	  if(!$list->isOwner)
+	    continue;
+
           // If list is bounce, remove the -bounce part
           $isBounce = false;
           if(preg_match("/(-bounce)/", $list->listAddress)) {
