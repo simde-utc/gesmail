@@ -10,15 +10,15 @@
       <ul class="navbar">
         <li><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a></li>
         <!-- We show all possile automatic lists -->
-        <li>Listes automatiques : </li>
-        <ul class="navbar list-unstyled">
+        <li class="expandbtn">Listes automatiques : </li>
+        <ul class="navbar list-unstyled expandable">
           <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) : ?>
             <li><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></li>
           <?php endforeach ?>
         </ul>
         <!--All lists where asso is owner -->
-        <li>Listes de l'association : </li>
-        <ul class="navbar list-unstyled">
+        <li class="expandbtn">Listes de l'association : </li>
+        <ul class="navbar list-unstyled expandable">
           <?php
 	    $assoSubscribedToList = array();
             $allListAsso = $sympaManager->lists($asso["login"] . SUFFIXE_MAIL);
@@ -42,8 +42,8 @@
         </ul>
 	<?php
 	if(!empty($assoSubscribedToList)) : ?>
-	<li>Listes auxquelles votre association est inscrite :</li>
-	<ul class="navbar list-unstyled">
+	<li class="expandbtn">Listes auxquelles votre association est inscrite :</li>
+	<ul class="navbar list-unstyled expandable">
           <?php foreach ($assoSubscribedToList as $key => $list) :
 	    if(preg_match("/(-bounce@)/", $list->listAddress))
                 $list->listAddress = $asso["login"] . SUFFIXE_MAIL; //Do not show the bounce part of email
@@ -80,8 +80,8 @@
   foreach ($assosPosteAutoPortail as $index => $asso) : ?>
     <li class="navitem"><?= $asso["shortname"] ?> : (membre de l'asso) </li>
     <ul class="navbar">
-      <li>Listes automatiques : </li>
-      <ul class="navbar list-unstyled">
+      <li class="expandbtn">Listes automatiques : </li>
+      <ul class="navbar list-unstyled expandable">
       <?php
       foreach (AUTOMATICSUFFIX as $key => $suffixe) :
         ?><li><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></li><?php
@@ -91,8 +91,8 @@
     <?php
       if(!empty($assosAdminSympa[$asso["login"]])) :
         ?>
-        <li>Listes que vous administrez : </li>
-        <ul class="navbar list-unstyled">
+        <li class="expandbtn">Listes que vous administrez : </li>
+        <ul class="navbar list-unstyled expandable">
           <?php
         usort($assosAdminSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
           foreach ($assosAdminSympa[$asso["login"]] as $list) :
@@ -106,8 +106,8 @@
       endif;
 
       if(!empty($assosSubSympa[$asso["login"]])) :
-        ?><li>Listes où vous êtes inscrit : </li>
-        <ul class="navbar list-unstyled">
+        ?><li class="expandbtn">Listes où vous êtes inscrit : </li>
+        <ul class="navbar list-unstyled expandable">
           <?php
           usort($assosSubSympa[$asso["login"]], function ($ml1, $ml2) { return strcmp($ml1, $ml2); });
           foreach ($assosSubSympa[$asso["login"]] as $list) :
@@ -132,8 +132,8 @@
   foreach ($assosOnlySubOrAdmin as $asso => $lists) :
     ?><li class="navitem"><?= $asso ?> : (membre / admin d'une liste)</li>
     <ul class="navbar">
-      <li>Admin</li>
-      <ul class="navbar list-unstyled">
+      <li class="expandbtn">Admin</li>
+      <ul class="navbar list-unstyled expandable">
         <?php
         foreach ($lists["admin"] as $index => $list) :
           if(preg_match("/(-bounce@)/", $list))
@@ -141,8 +141,8 @@
             ?><li><a href="/gesmail/adminlist.php?asso=<?= $asso ?>&list=<?= $list ?>"><?= $list ?></a></li><?php
         endforeach; ?>
       </ul>
-      <li>Subscriber</li>
-      <ul class="navbar list-unstyled">
+      <li class="expandbtn">Subscriber</li>
+      <ul class="navbar list-unstyled expandable">
         <?php
         foreach ($lists["subscriber"] as $index => $list) :
 	  if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list))

@@ -29,6 +29,9 @@
     display: block;
   }
 
+  .expandbtn[expanded] + .expandable {
+    display: none!important;
+  }
 
 /* Dark theme css */
   [data-theme="dark"] {

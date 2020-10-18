@@ -67,3 +67,8 @@ function reloadLeftMenu() {
     document.getElementById("leftMenu").innerHTML = response;
   });
 }
+
+document.getElementById("leftMenu").addEventListener("click", function(evt) {
+  if (evt.target.matches('.expandbtn'))
+    evt.target.toggleAttribute("expanded");
+});
