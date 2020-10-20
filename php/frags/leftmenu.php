@@ -6,8 +6,11 @@
   <ul class="navbar list-unstyled">
   <?php
   foreach ($assosAdminPortail as $index => $asso) : //Show all lists (including automatic lists)?>
-      <li class="navitem"><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (accès complets)</li>
-      <ul class="navbar">
+      <li class="navitem expandbtn" <?= (isset($_GET["asso"]) && $asso["login"] == htmlspecialchars($_GET["asso"])) ? "" : "unexpanded"; ?>>
+        <span class="selectorExpandBtn">></span>
+        <a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>"><?= $asso["shortname"] ?></a> : (accès complets)
+      </li>
+      <ul class="navbar expandable">
         <li><a href="/gesmail/asso.php?asso=<?= $asso["login"] ?>">Créer une liste pour <?= $asso["shortname"] ?></a></li>
         <!-- We show all possile automatic lists -->
         <li>Listes automatiques : </li>
@@ -78,8 +81,11 @@
   <!-- Now show lists for all members -->
   <?php
   foreach ($assosPosteAutoPortail as $index => $asso) : ?>
-    <li class="navitem"><?= $asso["shortname"] ?> : (membre de l'asso) </li>
-    <ul class="navbar">
+    <li class="navitem expandbtn" unexpanded>
+      <span class="selectorExpandBtn">></span>
+      <?= $asso["shortname"] ?> : (membre de l'asso)
+    </li>
+    <ul class="navbar expandable">
       <li>Listes automatiques : </li>
       <ul class="navbar list-unstyled">
       <?php
@@ -130,8 +136,11 @@
   <!-- Here, we show lists where user is subscribed / admin but not member of the asso -->
   <?php
   foreach ($assosOnlySubOrAdmin as $asso => $lists) :
-    ?><li class="navitem"><?= $asso ?> : (membre / admin d'une liste)</li>
-    <ul class="navbar">
+    ?><li class="navitem expandbtn" unexpanded>
+      <span class="selectorExpandBtn">></span>
+      <?= $asso ?> : (membre / admin d'une liste)
+    </li>
+    <ul class="navbar expandable">
       <li>Admin</li>
       <ul class="navbar list-unstyled">
         <?php

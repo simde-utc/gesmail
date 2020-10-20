@@ -34,6 +34,7 @@
     <ul id="listOfMailingLists" suffix="<?= SUFFIXE_MAIL ?>">
       <?php
         $specificLists = [];
+        $currAssoSubscribedToList = [];
         $allListsOfAsso = $sympaManager->lists($currentAsso["login"] . SUFFIXE_MAIL);
         usort($allListsOfAsso, function ($ml1, $ml2) { return strcmp($ml1->listAddress, $ml2->listAddress); });
         foreach ($allListsOfAsso as $index => $list) :
@@ -41,8 +42,10 @@
           if(preg_match("/[[:<:]](". implode('|', AUTOMATICSUFFIX) .")[[:>:]]/", $list->listAddress))
             continue;
 
-	  if(!$list->isOwner)
-	    continue;
+      	  if(!$list->isOwner) {
+            $currAssoSubscribedToList[] = $list;
+            continue;
+          }
 
           // If list is bounce, remove the -bounce part
           $isBounce = false;
@@ -82,6 +85,34 @@
       <input type="submit" class="btn btn-primary" id="createListBtn" asso="<?= $currentAsso["login"] ?>" value="Créer" />
     </form>
   </div>
+  <div class="container bloc">
+    <h1 class="text-center text-break">Listes automatiques de l'association : <?= $currentAsso["name"] ?></h1>
+    <ul class="navbar list-unstyled">
+      <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) : ?>
+        <li>
+          <input class="form-control" value="<?= $currentAsso["login"] . "-$suffixe" . SUFFIXE_MAIL ?>" disabled></input>
+        </li>
+      <?php endforeach ?>
+    </ul>
+  </div>
+  <?php
+  if(!empty($currAssoSubscribedToList)) : ?>
+  <div class="container bloc">
+    <h1>Listes auxquelles votre association est inscrite :</h1>
+    <ul class="navbar list-unstyled">
+      <?php foreach ($currAssoSubscribedToList as $key => $list) :
+        if(preg_match("/(-bounce@)/", $list->listAddress))
+          $list->listAddress = $currentAsso["login"] . SUFFIXE_MAIL; //Do not show the bounce part of email
+      ?>
+        <li>
+          <input class="form-control" value="<?= $list->listAddress ?>" disabled></input>
+        </li>
+      <?php endforeach ?>
+    </ul>
+  </div>
+  <?php
+  endif;
+  ?>
 </div>
 <li id="skeletonMLRow" class="input-group rowsEmail">
   <input class="form-control" value="" disabled></input>

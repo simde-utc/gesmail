@@ -29,6 +29,25 @@
     display: block;
   }
 
+  .expandbtn {
+    cursor: pointer;
+  }
+
+  .selectorExpandBtn {
+      display: inline-block;
+      margin-left: -5%;
+      transform-origin: center;
+      transform: rotate(90deg);
+      transition: transform 0.25s;
+  }
+
+  .expandbtn[unexpanded] > .selectorExpandBtn {
+    transform: rotate(0deg)!important;
+  }
+
+  .expandbtn[unexpanded] + .expandable {
+    display: none!important;
+  }
 
 /* Dark theme css */
   [data-theme="dark"] {
