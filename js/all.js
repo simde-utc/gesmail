@@ -71,4 +71,6 @@ function reloadLeftMenu() {
 document.getElementById("leftMenu").addEventListener("click", function(evt) {
   if (evt.target.matches('.expandbtn'))
     evt.target.toggleAttribute("unexpanded");
+  else if(evt.target.matches('.selectorExpandBtn'))
+    evt.target.parentNode.toggleAttribute("unexpanded");
 });

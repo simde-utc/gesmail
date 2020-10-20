@@ -29,6 +29,23 @@
     display: block;
   }
 
+  .expandbtn {
+    cursor: pointer;
+  }
+
+  .selectorExpandBtn {
+      display: inline-block;
+      margin-left: -5%;
+      margin-right: 2%;
+      transform-origin: center;
+      transform: rotate(90deg);
+      transition: transform 0.5s;
+  }
+
+  .expandbtn[unexpanded] > .selectorExpandBtn {
+    transform: rotate(0deg)!important;
+  }
+
   .expandbtn[unexpanded] + .expandable {
     display: none!important;
   }
