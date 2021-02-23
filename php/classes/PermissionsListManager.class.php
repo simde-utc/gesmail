@@ -18,14 +18,14 @@
     public function add($list, $send) {
       $statement = $this->_db->prepare("INSERT INTO default_list (list, send) VALUES(:list, :send)");
       $statement->bindValue(":list", $list);
-      $statement->bindValue(":send", $send, PDO::PARAM_BOOL);
+      $statement->bindValue(":send", $send, PDO::PARAM_INT);
       $statement->execute();
       return false;
     }
 
     public function update($list, $send) {
       $statement = $this->_db->prepare("UPDATE default_list SET send = :send WHERE list = :list");
-      $statement->bindValue(":send", $send, PDO::PARAM_BOOL);
+      $statement->bindValue(":send", $send, PDO::PARAM_INT);
       $statement->bindValue(":list", $list);
       $statement->execute();
       return false;

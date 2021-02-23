@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `default_list` (
   `list` varchar(250) NOT NULL,
-  `send` tinyint(1) NOT NULL
+  `send` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
