@@ -61,8 +61,9 @@
           <input class="form-control" value="<?= $list->listAddress ?>" disabled></input>
           <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
             <select class="form-control <?= ($isBounce) ? "d-none" : "" ?>">
-              <option <?= (isset($default["send"]) && $default["send"]) ? "selected" : "" ?> value="1">Tous les membres peuvent envoyer un mail</option>
-              <option <?= (isset($default["send"]) && $default["send"]) ? "" : "selected" ?> value="0">Liste modérée</option>
+              <option <?= (isset($default["send"]) && $default["send"] == "1") ? "selected" : "" ?> value="1">Tous les membres peuvent envoyer un mail</option>
+              <option <?= (isset($default["send"]) && $default["send"] == "2") ? "selected" : "" ?> value="2">Liste publique</option>
+              <option <?= (isset($default["send"]) && $default["send"] == "0") ? "selected" : "" ?> value="0">Liste modérée</option>
             </select>
             <button class="btn btn-primary updateListBtn <?= ($isBounce) ? "d-none" : "" ?>" asso="<?= $currentAsso["login"] ?>" list="<?= $list->listAddress ?>">Modifier</button>
             <a class="btn btn-secondary noColor" href="/gesmail/list.php?asso=<?= $currentAsso["login"] ?>&list=<?= $list->listAddress ?>" role="button">Détails</a>

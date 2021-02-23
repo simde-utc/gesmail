@@ -64,7 +64,11 @@
   </div>
   <div class="container bloc">
     <h1 class="text-center text-break">Droits sur <?= $displayAdress ?></h1>
-    <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
+    <?php if(isset($permissionsList["send"]) && $permissionsList["send"] == "2"): ?>
+        <span class="badge badge-pill badge-primary">Mailing liste publique</span>
+    <?php else: ?>
+        <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
+    <?php endif; ?>
     <span class="badge badge-pill badge-primary"><?= ($isAdmin) ? "Administrateur" : "Non administrateur" ?></span>
     <span class="badge badge-pill badge-primary"><?= ($canGoThroughModeration) ? "Droit de passer outre la modération" : "Pas le droit de passer outre la modération" ?></span>
   </div>

@@ -42,7 +42,7 @@
   }
 
   // By default lists are not moderated
-  $permissionsListManager->add($fullName, true);
+  $permissionsListManager->add($fullName, 1);
 
   if($statusCreate)
     exit(json_encode(["status" => 0, "success" => "Liste crée avec succès"], JSON_UNESCAPED_UNICODE));

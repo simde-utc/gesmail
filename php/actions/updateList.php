@@ -14,9 +14,9 @@
   //escape everything + check if setted properly
   $listname = htmlspecialchars(trim($_POST["listname"]));
   $asso = htmlspecialchars(trim($_POST["asso"]));
-  $send = (bool) $_POST["send"];
+  $send = (int) $_POST["send"];
 
-  if(!is_bool($send))
+  if(!is_integer($send) || $send > 2 || $send < 0)
     exit(json_encode(["status" => 1, "error" => "Send state invalide"], JSON_UNESCAPED_UNICODE));
 
   //Make sure email is valid
