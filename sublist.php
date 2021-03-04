@@ -66,7 +66,7 @@
     <h1 class="text-center text-break">Droits sur <?= $displayAdress ?></h1>
     <?php if(isset($permissionsList["send"]) && $permissionsList["send"] == "2"): ?>
         <span class="badge badge-pill badge-primary">Mailing liste publique</span>
-    <?php else: ?>
+    <?php elseif(!$isRedirection): ?>
         <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
     <?php endif; ?>
     <span class="badge badge-pill badge-primary"><?= ($isAdmin) ? "Administrateur" : "Non administrateur" ?></span>

@@ -68,7 +68,7 @@
     <p>Note: Les membres de la liste <?= $currentAsso["login"] . SUFFIXE_MAIL ?> auront le droit d'administrer les messages de cette liste.<p>
     <?php if(isset($permissionsList["send"]) && $permissionsList["send"] == "2"): ?>
         <span class="badge badge-pill badge-primary">Mailing liste publique</span>
-    <?php else: ?>
+    <?php elseif(!$isRedirection): ?>
         <span class="badge badge-pill badge-primary"><?= (isset($permissionsList["send"]) && $permissionsList["send"]) ? "Mailing liste non modérée" : "Mailing liste modérée" ?></span>
     <?php endif; ?>
   </div>
