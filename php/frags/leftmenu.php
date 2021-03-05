@@ -15,8 +15,11 @@
         <!-- We show all possile automatic lists -->
         <li>Listes automatiques : </li>
         <ul class="navbar list-unstyled">
-          <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) : ?>
-            <li><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></li>
+          <?php foreach (AUTOMATICSUFFIX as $key => $suffixe) :
+            if($suffixe == "tous")
+              continue;
+          ?>
+            <li><a href="/gesmail/autolist.php?asso=<?= $asso["login"] ?>&list=<?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?>"><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></a></li>
           <?php endforeach ?>
         </ul>
         <!--All lists where asso is owner -->
@@ -90,9 +93,11 @@
       <ul class="navbar list-unstyled">
       <?php
       foreach (AUTOMATICSUFFIX as $key => $suffixe) :
-        ?><li><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></li><?php
-      endforeach;
+        if($suffixe == "tous")
+          continue;
       ?>
+        <li><a href="/gesmail/autolist.php?asso=<?= $asso["login"] ?>&list=<?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?>"><?= $asso["login"] . "-$suffixe" . SUFFIXE_MAIL ?></a></li>
+      <?php endforeach; ?>
     </ul>
     <?php
       if(!empty($assosAdminSympa[$asso["login"]])) :

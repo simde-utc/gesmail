@@ -119,7 +119,8 @@
   <input class="form-control" value="" disabled></input>
   <div class="input-group-append d-flex flex-wrap flex-lg-nowrap" role="group">
     <select class="form-control">
-      <option selected value="1">Tous les membres</option>
+      <option selected value="1">Tous les membres peuvent envoyer un mail</option>
+      <option value="2">Liste publique</option>
       <option value="0">Liste modérée</option>
     </select>
     <button class="btn btn-primary updateListBtn" asso="<?= $currentAsso["login"] ?>" list="">Modifier</button>
